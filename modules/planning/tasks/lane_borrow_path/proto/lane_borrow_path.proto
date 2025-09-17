@@ -4,11 +4,39 @@ import "modules/planning/planning_base/proto/piecewise_jerk_path_config.proto";
 
 package apollo.planning;
 
+// MODIFICATION FOR CONSTRUCTION ZONE
+message ConstructionZoneConfig {
+  // The mandatory speed limit inside the construction zone.
+  optional double speed_limit_kph = 1 [default = 30.0];
+  // The minimum number of cones in a sequence to be considered a valid zone.
+  optional uint32 min_cones_for_detection = 2 [default = 3];
+  // The maximum longitudinal distance between two consecutive cones for them to
+  // be part of the same zone.
+  optional double max_cone_gap_m = 3 [default = 15.0];
+  // Distance before the first cone at which the vehicle should start
+  // decelerating to the speed limit.
+  optional double slowdown_start_buffer_m = 4 [default = 15.0];
+  // Distance after the last cone that the vehicle must clear before resuming
+  // its original speed.
+  optional double speedup_end_buffer_m = 5 [default = 10.0];
+}
+// MODIFICATION FOR CONSTRUCTION ZONE
+
 message LaneBorrowPathConfig {
   optional PiecewiseJerkPathConfig path_optimizer_config = 1;
   optional bool is_allow_lane_borrowing = 2 [default = true];
-  // The max speed of adc condition triggering lane borrow 
+  // The max speed of adc condition triggering lane borrow
   optional double lane_borrow_max_speed = 3 [default = 5.0];
   // Determine if the obstacle is long-term parking
   optional int64 long_term_blocking_obstacle_cycle_threshold =4 [default = 3];
+  // MODIFICATION START: Add a specific buffer for lane borrow obstacles
+  // This buffer is the required clearance from the obstacle during a lane borrow maneuver.
+  optional double static_obstacle_lateral_buffer = 5 [default = 0.5];  // meters
+  // MODIFICATION END
+
+  // MODIFICATION FOR CONSTRUCTION ZONE
+  // Configuration for detecting and handling construction zones.
+  // If this field is present, the feature is enabled.
+  optional ConstructionZoneConfig construction_zone_config = 6;
+  // MODIFICATION FOR CONSTRUCTION ZONE
 }

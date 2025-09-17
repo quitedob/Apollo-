@@ -1,6 +1,22 @@
 is_allow_lane_borrowing: true
-lane_borrow_max_speed: 5.0
+# Reduced for narrow passage navigation safety (ISCC 2025)
+# Original: 5.0m/s, New: 2.0m/s - ensures precise control in tight spaces
+lane_borrow_max_speed: 2.0
 long_term_blocking_obstacle_cycle_threshold: 3
+# Set the lateral buffer to 1.0 meter as required by the competition rules.
+static_obstacle_lateral_buffer: 1.0
+
+# MODIFICATION FOR CONSTRUCTION ZONE
+# Configuration block for the construction zone feature.
+construction_zone_config {
+  speed_limit_kph: 30.0
+  min_cones_for_detection: 3
+  max_cone_gap_m: 15.0
+  slowdown_start_buffer_m: 15.0
+  speedup_end_buffer_m: 10.0
+}
+# MODIFICATION FOR CONSTRUCTION ZONE
+
 path_optimizer_config {
   l_weight: 1.0
   dl_weight: 20.0

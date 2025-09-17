@@ -28,6 +28,8 @@
 #include <utility>
 #include <vector>
 
+#include <boost/optional.hpp>
+
 #include "modules/common/vehicle_state/proto/vehicle_state.pb.h"
 #include "modules/common_msgs/basic_msgs/drive_state.pb.h"
 #include "modules/common_msgs/basic_msgs/pnc_point.pb.h"
@@ -54,6 +56,18 @@ namespace planning {
  */
 class ReferenceLineInfo {
  public:
+  // MODIFICATION FOR CONSTRUCTION ZONE
+  /**
+   * @struct ConstructionZoneInfo
+   * @brief A struct to hold information about a detected construction zone.
+   */
+  struct ConstructionZoneInfo {
+    double start_s = 0.0;
+    double end_s = 0.0;
+    double speed_limit_mps = 0.0;
+  };
+  // MODIFICATION FOR CONSTRUCTION ZONE
+
   enum class LaneType { LeftForward, LeftReverse, RightForward, RightReverse };
   ReferenceLineInfo() = default;
 
@@ -286,6 +300,24 @@ class ReferenceLineInfo {
   const PathBoundary& reference_line_towing_path_boundary() const;
   PathBoundary* mutable_reference_line_towing_path_boundary();
 
+  // MODIFICATION FOR CONSTRUCTION ZONE
+  /**
+   * @brief Set the construction zone information for this reference line.
+   * @param zone_info The detected construction zone's properties.
+   */
+  void SetConstructionZone(const ConstructionZoneInfo& zone_info) {
+    construction_zone_info_ = zone_info;
+  }
+
+  /**
+   * @brief Get the construction zone information.
+   * @return A boost::optional containing the zone info if it exists.
+   */
+  const boost::optional<ConstructionZoneInfo>& construction_zone_info() const {
+    return construction_zone_info_;
+  }
+  // MODIFICATION FOR CONSTRUCTION ZONE
+
  private:
   void InitFirstOverlaps();
 
@@ -396,6 +428,10 @@ class ReferenceLineInfo {
   std::string id_ = "";
   std::size_t key_ = 0;
   std::size_t index_ = 0;
+
+  // MODIFICATION FOR CONSTRUCTION ZONE
+  boost::optional<ConstructionZoneInfo> construction_zone_info_;
+  // MODIFICATION FOR CONSTRUCTION ZONE
 
   DISALLOW_COPY_AND_ASSIGN(ReferenceLineInfo);
 };

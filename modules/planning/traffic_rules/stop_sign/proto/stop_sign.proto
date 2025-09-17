@@ -8,6 +8,9 @@ package apollo.planning;
 message StopSignConfig {
   // Flag if processing of stop sign is enabled.
   optional bool enabled = 1 [default = true];
-  // Safty stop distance(m) to the stop line of the stop sign.
+  // Safety stop distance(m) to the stop line of the stop sign.
+  // This distance is measured from the vehicle's planning reference point (rear axle center)
+  // to the stop line. For precise bumper positioning, this value should be:
+  // stop_distance = desired_bumper_distance + front_edge_to_center
   optional double stop_distance = 2 [default = 1.0];  // meter
 }

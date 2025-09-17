@@ -62,6 +62,15 @@ class ValetParkingScenario : public Scenario {
       const hdmap::Path& nearby_path, const double parking_start_range,
       const hdmap::PathOverlap& parking_space_overlap);
 
+  // [新功能] 查找距离入口最近的可用泊车位。
+  // 如果找到，则返回true，并通过指针传出目标车位ID。
+  // 如果未找到合适的车位，则返回false。
+  bool FindClosestAvailableSpot(Frame* frame, std::string* target_spot_id);
+
+  // [新功能] 检查给定的泊车位是否被当前帧中的任何障碍物占用。
+  bool IsSpotAvailable(const hdmap::ParkingSpaceInfoConstPtr& parking_spot,
+                      Frame* frame);
+
  private:
   bool init_ = false;
   ValetParkingContext context_;

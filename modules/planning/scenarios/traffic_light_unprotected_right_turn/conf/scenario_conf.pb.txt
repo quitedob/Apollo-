@@ -1,5 +1,5 @@
 start_traffic_light_scenario_distance: 5.0
-enable_right_turn_on_red: false
+enable_right_turn_on_red: true
 max_valid_stop_distance: 2.0
 min_pass_s_distance: 3.0
 red_light_right_turn_stop_duration_sec: 3.0

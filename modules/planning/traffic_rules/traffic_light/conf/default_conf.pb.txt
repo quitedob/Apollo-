@@ -1,3 +1,5 @@
 enabled: true
-stop_distance: 1.0
+# stop_distance defines the maximum allowed distance from the stop line.
+# The vehicle will target a preferred distance within this limit.
+stop_distance: 2.0
 max_stop_deceleration: 4.0

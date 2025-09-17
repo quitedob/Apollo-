@@ -1,2 +1,4 @@
-static_obstacle_buffer: 0.3
+# Reduced static_obstacle_buffer for ISCC 2025 narrow passage navigation
+# Original: 0.3m, New: 0.05m - balances safety with passage capability
+static_obstacle_buffer: 0.05
 skip_overlap_stop_check: true

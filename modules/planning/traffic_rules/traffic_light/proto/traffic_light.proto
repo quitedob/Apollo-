@@ -8,8 +8,10 @@ package apollo.planning;
 message TrafficLightConfig {
   // Flag if processing of traffic light is enabled.
   optional bool enabled = 1 [default = true];
-  // Safty stop distance(m) to the stop line of the traffic light.
-  optional double stop_distance = 2 [default = 1.0];  // meter
+  // Safety stop distance(m) to the stop line of the traffic light.
+  // MODIFICATION START: Adjust default value to align with competition rules' outer bound.
+  optional double stop_distance = 2 [default = 2.0];  // meter
+  // MODIFICATION END
   // If the deceleration needed for ego-vehicle to stop in front of the traffic
   // light it too big > "max_stop_deceleration", which means it is too late to
   // stop, the red traffic light will be ignored and ego-vehicle will move on.

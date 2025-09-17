@@ -39,6 +39,14 @@ namespace planning {
 using apollo::common::Status;
 using apollo::hdmap::PathOverlap;
 
+// MODIFICATION START: Define preferred stop distance for ISCC_2025
+// This value is chosen to be within the [1.5, 2.0] meter window,
+// providing a 20cm buffer for control and localization errors.
+namespace {
+constexpr double kPreferredStopDistance = 1.8;
+}  // namespace
+// MODIFICATION END
+
 bool TrafficLight::Init(const std::string& name,
                         const std::shared_ptr<DependencyInjector>& injector) {
   if (!TrafficRule::Init(name, injector)) {
@@ -152,17 +160,33 @@ void TrafficLight::MakeDecisions(Frame* const frame,
       continue;
     }
 
+    // MODIFICATION START: Implement precision stop logic for ISCC_2025
+    // Use the configured stop_distance as the outer bound (e.g., 2.0m).
+    // Build the stop fence at the preferred distance (e.g., 1.8m) to
+    // maximize scoring potential while maintaining a safety buffer.
+    double stop_distance = kPreferredStopDistance;
+    if (stop_distance > config_.stop_distance()) {
+      AWARN << "Preferred stop distance " << kPreferredStopDistance
+            << " is greater than the configured max stop distance "
+            << config_.stop_distance() << ". Using configured value.";
+      stop_distance = config_.stop_distance();
+    }
+
+    const double stop_line_s = traffic_light_overlap.start_s;
+    const double stop_s = stop_line_s - stop_distance;
+    // MODIFICATION END
+
     // build stop decision
     ADEBUG << "BuildStopDecision: traffic_light["
            << traffic_light_overlap.object_id << "] start_s["
            << traffic_light_overlap.start_s << "]"
-           << "stop_distance: " << config_.stop_distance();
+           << "preferred_stop_distance: " << stop_distance;
     std::string virtual_obstacle_id =
         TRAFFIC_LIGHT_VO_ID_PREFIX + traffic_light_overlap.object_id;
     const std::vector<std::string> wait_for_obstacles;
     util::BuildStopDecision(
-        virtual_obstacle_id, traffic_light_overlap.start_s,
-        config_.stop_distance(), StopReasonCode::STOP_REASON_SIGNAL,
+        virtual_obstacle_id, stop_line_s,
+        stop_distance, StopReasonCode::STOP_REASON_SIGNAL,
         wait_for_obstacles, Getname(), frame, reference_line_info);
   }
 }

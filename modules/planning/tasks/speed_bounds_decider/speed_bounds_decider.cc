@@ -108,6 +108,15 @@ Status SpeedBoundsDecider::Process(
     return Status(ErrorCode::PLANNING_ERROR, msg);
   }
 
+  // MODIFICATION FOR CONSTRUCTION ZONE
+  // Add speed limit from detected construction zone.
+  if (!AddSpeedLimitFromConstructionZone(&speed_limit).ok()) {
+    const std::string msg = "Add speed limit from construction zone failed";
+    AERROR << msg;
+    return Status(ErrorCode::PLANNING_ERROR, msg);
+  }
+  // MODIFICATION FOR CONSTRUCTION ZONE
+
   // 3. Get path_length as s axis search bound in st graph
   const double path_data_length = path_data.discretized_path().Length();
 
@@ -212,6 +221,44 @@ void SpeedBoundsDecider::RecordSTGraphDebug(
     speed_point->set_v(point.second);
   }
 }
+
+// MODIFICATION FOR CONSTRUCTION ZONE
+Status SpeedBoundsDecider::AddSpeedLimitFromConstructionZone(
+    SpeedLimit* const speed_limit) {
+  ACHECK_NOTNULL(speed_limit);
+  const auto& zone_info_opt = reference_line_info_->construction_zone_info();
+
+  if (!zone_info_opt) {
+    // No construction zone detected on this reference line.
+    return Status::OK();
+  }
+
+  const auto& zone_info = *zone_info_opt;
+  // TODO(all): A better way to get config without coupling.
+  // For this task, we assume the config is available.
+  const auto& construction_config = injector_->planning_context()
+                                        ->planning_status()
+                                       .lane_borrow_path_config()
+                                       .construction_zone_config();
+
+  const double slowdown_buffer =
+      construction_config.slowdown_start_buffer_m();
+  const double speedup_buffer =
+      construction_config.speedup_end_buffer_m();
+
+  const double start_s = std::max(0.0, zone_info.start_s - slowdown_buffer);
+  const double end_s = zone_info.end_s + speedup_buffer;
+
+  // Apply speed limit by adding discrete points at the start and end
+  speed_limit->AppendSpeedLimit(start_s, zone_info.speed_limit_mps);
+  speed_limit->AppendSpeedLimit(end_s, zone_info.speed_limit_mps);
+  ADEBUG << "Added construction zone speed limit of "
+         << zone_info.speed_limit_mps << " m/s from s=" << start_s
+         << " to s=" << end_s;
+
+  return Status::OK();
+}
+// MODIFICATION FOR CONSTRUCTION ZONE
 
 }  // namespace planning
 }  // namespace apollo

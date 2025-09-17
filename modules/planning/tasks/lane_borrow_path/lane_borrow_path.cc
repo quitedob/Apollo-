@@ -62,6 +62,19 @@ apollo::common::Status LaneBorrowPath::Process(
            << ",skip";
     return Status::OK();
   }
+
+  // MODIFICATION FOR CONSTRUCTION ZONE
+  // Step 1: Detect construction zone and store info if found.
+  ReferenceLineInfo::ConstructionZoneInfo zone_info;
+  if (config_.has_construction_zone_config() &&
+      DetectConstructionZone(&zone_info)) {
+    reference_line_info->SetConstructionZone(zone_info);
+    ADEBUG << "Construction zone detected and registered: start_s["
+           << zone_info.start_s << "], end_s[" << zone_info.end_s
+           << "], speed_limit[" << zone_info.speed_limit_mps << " m/s].";
+  }
+  // MODIFICATION FOR CONSTRUCTION ZONE
+
   if (!IsNecessaryToBorrowLane()) {
     ADEBUG << "No need to borrow lane";
     return Status::OK();
@@ -117,10 +130,27 @@ bool LaneBorrowPath::DecidePathBounds(std::vector<PathBoundary>* boundary) {
 
     // path_bound.DebugString("after_neighbor_lane");
     // 3. Fine-tune the boundary based on static obstacles
+    // MODIFICATION START: Apply lateral buffer to static obstacles
+    // We modify the SL polygons to include the lateral buffer before calling
+    // the PathBoundsDeciderUtil function.
     PathBound temp_path_bound = path_bound;
     std::vector<SLPolygon> obs_sl_polygons;
     PathBoundsDeciderUtil::GetSLPolygons(*reference_line_info_,
                                          &obs_sl_polygons, init_sl_state_);
+
+    // Apply the configured lateral buffer to static obstacles
+    double lateral_buffer = config_.static_obstacle_lateral_buffer();
+    ADEBUG << "Using lateral buffer for static obstacles: " << lateral_buffer << " meters";
+
+    // Expand the SL polygons by the lateral buffer
+    for (auto& sl_polygon : obs_sl_polygons) {
+      // Expand the left boundary inward (towards center) and right boundary outward
+      for (auto& sl_point : sl_polygon.sl_boundary()) {
+        sl_point.set_l_min(sl_point.l_min() + lateral_buffer);
+        sl_point.set_l_max(sl_point.l_max() - lateral_buffer);
+      }
+    }
+
     if (!PathBoundsDeciderUtil::GetBoundaryFromStaticObstacles(
             *reference_line_info_, &obs_sl_polygons, init_sl_state_,
             &path_bound, &blocking_obstacle_id, &path_narrowest_width)) {
@@ -131,6 +161,7 @@ bool LaneBorrowPath::DecidePathBounds(std::vector<PathBoundary>* boundary) {
       boundary->pop_back();
       continue;
     }
+    // MODIFICATION END
     // path_bound.DebugString("after_obs");
     // 4. Append some extra path bound points to avoid zero-length path data.
     int counter = 0;
@@ -356,9 +387,17 @@ void LaneBorrowPath::UpdateSelfPathInfo() {
   blocking_obstacle_id_ = cur_path.blocking_obstacle_id();
 }
 bool LaneBorrowPath::IsNecessaryToBorrowLane() {
+  // MODIFICATION FOR CONSTRUCTION ZONE
+  // If a construction zone is detected, it's necessary to "borrow lane".
+  if (reference_line_info_->construction_zone_info()) {
+    ADEBUG << "Forcing lane borrow due to construction zone.";
+    return true;
+  }
+  // MODIFICATION FOR CONSTRUCTION ZONE
+
   auto* mutable_path_decider_status = injector_->planning_context()
-                                          ->mutable_planning_status()
-                                          ->mutable_path_decider();
+                                         ->mutable_planning_status()
+                                         ->mutable_path_decider();
   if (mutable_path_decider_status->is_in_path_lane_borrow_scenario()) {
     UpdateSelfPathInfo();
     // If originally borrowing neighbor lane:
@@ -783,6 +822,67 @@ int GetBackToInLaneIndex(
   }
   return 0;
 }
+
+// MODIFICATION FOR CONSTRUCTION ZONE
+bool LaneBorrowPath::DetectConstructionZone(
+    ReferenceLineInfo::ConstructionZoneInfo* zone_info) {
+  ACHECK_NOTNULL(zone_info);
+  const auto& construction_config = config_.construction_zone_config();
+
+  std::vector<const Obstacle*> cones;
+  for (const auto* obstacle :
+       reference_line_info_->path_decision()->obstacles().Items()) {
+    if (obstacle->Perception().type() ==
+        perception::PerceptionObstacle::TRAFFICCONE) {
+      cones.push_back(obstacle);
+    }
+  }
+
+  if (cones.size() < construction_config.min_cones_for_detection()) {
+    return false;
+  }
+
+  // Sort cones by their longitudinal distance
+  std::sort(cones.begin(), cones.end(),
+           (const Obstacle* a, const Obstacle* b) {
+              return a->PerceptionSLBoundary().start_s() <
+                     b->PerceptionSLBoundary().start_s();
+            });
+
+  std::vector<const Obstacle*> current_group;
+  if (!cones.empty()) {
+    current_group.push_back(cones.front());
+  }
+
+  for (size_t i = 1; i < cones.size(); ++i) {
+    const double gap = cones[i]->PerceptionSLBoundary().start_s() -
+                       cones[i - 1]->PerceptionSLBoundary().end_s();
+    if (gap <= construction_config.max_cone_gap_m()) {
+      current_group.push_back(cones[i]);
+    } else {
+      // Found a gap, check if the current group is a valid zone
+      if (current_group.size() >=
+          construction_config.min_cones_for_detection()) {
+        break;  // Found the first valid group
+      }
+      // Start a new group
+      current_group.clear();
+      current_group.push_back(cones[i]);
+    }
+  }
+
+  // Final check for the last group
+  if (current_group.size() >= construction_config.min_cones_for_detection()) {
+    zone_info->start_s = current_group.front()->PerceptionSLBoundary().start_s();
+    zone_info->end_s = current_group.back()->PerceptionSLBoundary().end_s();
+    zone_info->speed_limit_mps =
+        construction_config.speed_limit_kph() / 3.6;
+    return true;
+  }
+
+  return false;
+}
+// MODIFICATION FOR CONSTRUCTION ZONE
 
 }  // namespace planning
 }  // namespace apollo

@@ -42,6 +42,10 @@ class StopSignUnprotectedStageStop : public Stage {
           watch_vehicles);
 
   StageResult FinishStage();
+
+  // 检查交叉口是否安全的智能函数
+  bool IsIntersectionClear(const Frame& frame,
+                          const ReferenceLineInfo& reference_line_info) const;
 };
 
 CYBER_PLUGIN_MANAGER_REGISTER_PLUGIN(
