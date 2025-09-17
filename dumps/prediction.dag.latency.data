@@ -1,0 +1,14 @@
+mainboard_cpu_usage_latency : 71
+mainboard_cpu_usage_latency_80 : 75
+mainboard_cpu_usage_latency_90 : 76
+mainboard_cpu_usage_latency_99 : 76
+mainboard_cpu_usage_latency_999 : 76
+mainboard_cpu_usage_latency_9999 : 76
+mainboard_cpu_usage_max_latency : 76
+mainboard_mem_resident_usage_latency : 1009416
+mainboard_mem_resident_usage_latency_80 : 1010636
+mainboard_mem_resident_usage_latency_90 : 1010880
+mainboard_mem_resident_usage_latency_99 : 1010880
+mainboard_mem_resident_usage_latency_999 : 1010880
+mainboard_mem_resident_usage_latency_9999 : 1010880
+mainboard_mem_resident_usage_max_latency : 1010880

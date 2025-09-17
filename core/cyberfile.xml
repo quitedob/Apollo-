@@ -1,0 +1,62 @@
+<package>
+  <name>core</name>
+  <version>local</version>
+  <description>
+    Apollo open source package set
+  </description>
+  <maintainer email="apollo-support@baidu.com">Apollo Maintainer</maintainer>
+  <type>module</type>
+  <src_path>//core</src_path>
+  <license>Apache License 2.0</license>
+  <author>Apollo</author>
+
+  <!-- basic -->
+  <depend repo_name="apollo-data" type="binary">apollo-data</depend>
+  <depend repo_name="apollo-scripts" type="binary">apollo-scripts</depend>
+
+  <!-- canbus -->
+  <depend repo_name="canbus" type="binary">canbus</depend>
+
+
+  <!-- control -->
+  <depend repo_name="control-controller-demo-control-task" type="binary">control-controller-demo-control-task</depend>
+  <depend repo_name="control-controller-lat-based-lqr-controller" type="binary">control-controller-lat-based-lqr-controller</depend>
+  <depend repo_name="control-controller-lon-based-pid-controller" type="binary">control-controller-lon-based-pid-controller</depend>
+  <depend repo_name="control-controller-mpc-controller" type="binary">control-controller-mpc-controller</depend>
+  <depend repo_name="control" type="binary">control</depend>
+
+  <!-- dreamview && monitor -->
+  <depend repo_name="dreamview" type="binary">dreamview</depend>
+  <depend repo_name="dreamview-plus" type="binary">dreamview-plus</depend>
+  <depend repo_name="monitor" type="binary">monitor</depend>
+
+  <!-- external_command -->
+  <depend repo_name="external-command-action" type="binary">external-command-action</depend>
+  <depend repo_name="external-command-demo" type="binary">external-command-demo</depend>
+  <depend repo_name="external-command-lane-follow" type="binary">external-command-lane-follow</depend>
+  <depend repo_name="external-command-process" type="binary">external-command-process</depend>
+  <depend repo_name="external-command-processor-base" type="binary">external-command-processor-base</depend>
+  <depend repo_name="external-command-valet-parking" type="binary">external-command-valet-parking</depend>
+  <depend repo_name="old-routing-adpter" type="binary">old-routing-adpter</depend>
+  <depend repo_name="routing" type="binary">routing</depend>
+
+  <!-- localization -->
+  <depend repo_name="localization" type="binary">localization</depend>
+  <!-- map -->
+  <depend repo_name="map" type="binary">map</depend>
+
+  <!-- planning -->
+  <depend repo_name="planning" type="binary">planning</depend>
+
+  <!-- prediction -->
+  <depend repo_name="prediction" type="binary">prediction</depend>
+
+  <!-- transform -->
+  <depend repo_name="transform" type="binary">transform</depend>
+
+  <depend repo_name="sim-obstacle" type="binary">sim-obstacle</depend>
+  <depend repo_name="studio-connector" type="binary">studio-connector</depend>
+  <depend repo_name="agent-server" type="binary">agent-server</depend>
+  <depend repo_name="simulator-plugin" type="binary">simulator-plugin</depend>
+  <builder>bazel</builder>
+</package>
