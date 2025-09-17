@@ -1,0 +1,424 @@
+需求解构
+竞赛规则可分解为四个独立但相互关联的技术要点：
+
+精确红灯停车 (1.5米 - 2.0米): 这项要求超越了简单的参数调整。Apollo 默认的停车逻辑是在停止线前一个固定的stop_distance处生成一个虚拟停止墙。而竞赛要求的 50 厘米精确窗口，则需要在该逻辑基础上进行修改，以确保车辆的目标停止点不仅精确，而且能为控制和定位系统的误差提供缓冲。
+
+红灯右转: 此行为是场景级别的决策。车辆在红灯前停车后，必须具备在满足特定条件下（例如，路口清晰）执行右转的能力。这完全符合 Apollo 场景化架构的设计理念。
+
+对向静止障碍物超车: 在完成右转并进入新的车道后，车辆的驾驶状态应恢复为常规的循线行驶。此时，若前方出现静止障碍物，系统需要触发一次借道绕行操作。
+
+严格的超车约束 (速度与横向距离): 在绕行过程中，必须严格遵守速度上限（5 m/s）和与障碍物的最小横向安全距离（1.0米）。这些是硬性约束，必须在路径规划和速度规划阶段得到保证。
+
+架构映射与场景流
+Apollo 的 PublicRoadPlanner 采用基于场景的双层状态机机制进行决策，这是解决本次竞赛任务的理想框架 。通过分析    
+
+modules/planning/planners/public_road/README_cn.md，我们可以确定一个清晰的场景转换流程来应对这一系列挑战 ：   
+
+LaneFollowScenario (车道保持场景): 这是车辆的默认行驶状态。当车辆在常规道路上行驶时，此场景被激活。
+
+TrafficLightUnprotectedRightTurnScenario (无保护右转交通灯场景): 当车辆接近需要右转的交通灯路口时，ScenarioManager 将根据高精地图信息和路由请求，自动将场景切换至此。该场景将负责处理红灯前的停车决策以及后续的右转执行。
+
+LaneFollowScenario (返回车道保持场景): 当车辆成功驶出交叉路口后，场景将切换回常规的车道保持状态。在此状态下，如果感知系统检测到前方车道内有符合条件的静止障碍物，LaneBorrowPath 任务将被触发，以执行借道超车操作。
+
+这种分而治之的策略，将复杂的驾驶任务分解到最合适的模块中处理，确保了逻辑的清晰性和可维护性。
+
+停车与转弯逻辑的解耦
+在制定实施策略时，一个关键的架构决策是将“精确停车”的逻辑与“红灯右转”的场景逻辑分离开来。
+
+Apollo 的规划框架将通用的交通规则（Traffic Rules）与具体的驾驶场景（Scenarios）分离开。通用的交通规则，如遇到红灯必须停车，由 modules/planning/traffic_rules/traffic_light/ 模块处理，该规则对所有场景都生效 。而    
+
+TrafficLightUnprotectedRightTurnScenario 这样的场景，则是在通用规则的基础上，增加更复杂的决策逻辑，例如判断在红灯状态下是否可以安全右转 。   
+
+遵循这一设计哲学，对本次任务的修改也应遵循解耦原则：
+
+精确停车逻辑应在通用的 TrafficLight 规则中实现。因为无论车辆是直行、左转还是右转，在红灯前精确停车的要求是普适的。将此逻辑放入底层交通规则中，可以保证其在所有交通灯场景下的一致性和鲁棒性。
+
+红灯右转及后续超车的决策则属于特定场景和任务的范畴。TrafficLightUnprotectedRightTurnScenario 负责管理右转的时机，而 LaneBorrowPath 任务则负责处理转弯后可能遇到的超车情况。
+
+这一决策避免了在特定场景中重复实现基础的停车逻辑，使得代码更符合 Apollo 的设计原则，也更易于未来的扩展和维护。接下来的章节将详细阐述如何在这两个不同层次上进行具体的代码和配置修改。
+
+II. 精确红灯停车的实现 (1.5米 - 2.0米窗口)
+为了满足在停止线前 1.5 米至 2.0 米窗口内停车的严苛要求，需要对 Apollo 处理交通灯停车的基础逻辑进行修改。此修改的核心在于将一个固定的停车点转变为一个有缓冲区的目标停车区域。
+
+目标文件识别
+核心逻辑文件: modules/planning/traffic_rules/traffic_light/traffic_light.cc。该文件中的 MakeDecisions 函数是创建红灯停车决策的核心，它负责在路径上生成虚拟的停止障碍物 。   
+
+配置文件: modules/planning/traffic_rules/traffic_light/conf/default_conf.pb.txt。此文件定义了默认的停车距离 stop_distance 。   
+
+协议定义文件: modules/planning/traffic_rules/traffic_light/proto/traffic_light.proto。该文件定义了配置参数的结构 。   
+
+默认行为分析
+Apollo 的默认行为相对简单：系统从高精地图中获取停止线的位置（stop_line_s），然后根据配置文件中的 stop_distance 参数，在 stop_line_s - stop_distance 的位置创建一个虚拟的停止墙。这种方法只能定义一个单一、刚性的停车点，无法满足竞赛中“窗口”的要求。简单地将 stop_distance 设置为 1.75 米是一种脆弱的方案，它没有为控制和定位系统的潜在误差留下任何容错空间。
+
+系统误差分析与鲁棒性设计
+规划模块输出的轨迹是理想的，但车辆的最终物理位置会受到控制模块的跟踪精度和定位模块的实时误差的影响。一个生产级的自动驾驶系统，其定位误差可能在 ±10-20 厘米，控制器跟踪误差可能在 ±5-10 厘米。在最坏的情况下，这些误差可能同向叠加，导致高达 30 厘米的实际位置偏差。
+
+考虑到 50 厘米的停车窗口，如果我们的目标是窗口的正中心点（1.75米），30 厘米的误差就可能导致车辆停在 1.45 米处，从而违反竞赛规则并导致扣分。为了构建一个在真实世界中足够鲁棒的系统，必须在规划层面主动为这些下游模块的误差提供缓冲。因此，一个更优的策略是将目标停车点设置在窗口内更靠后的位置，例如 1.80 米或 1.85 米。这为系统提供了更大的容错边际，显著提高了在竞赛中稳定得分的概率。本次实施将选择 1.80 米作为首选目标停车距离，以平衡精度和鲁棒性。
+
+解决方案与代码修改
+策略是：利用配置文件中的 stop_distance 参数来定义竞赛规则的硬边界（2.0米），同时在代码中硬编码一个更安全、更理想的目标停车点（1.80米）。
+
+1. 修改 modules/planning/traffic_rules/traffic_light/proto/traffic_light.proto
+首先，为了使停车距离更具灵活性并符合规则，我们将为 stop_distance 增加一个更合适的默认值。
+
+Protocol Buffers
+
+syntax = "proto2";
+
+package apollo.planning;
+
+//////////////////////////////////
+// TrafficLightConfig
+message TrafficLightConfig {
+  // Flag if processing of traffic light is enabled.
+  optional bool enabled = 1 [default = true];
+
+  // Safty stop distance(m) to the stop line of the traffic light.
+  // MODIFICATION START: Adjust default value to align with competition rules' outer bound.
+  optional double stop_distance = 2 [default = 2.0];  // meter
+  // MODIFICATION END
+}
+2. 修改 modules/planning/traffic_rules/traffic_light/conf/default_conf.pb.txt
+更新配置文件，明确设置停车距离为规则的上限。
+
+Protocol Buffers
+
+enabled: true
+# stop_distance defines the maximum allowed distance from the stop line.
+# The vehicle will target a preferred distance within this limit.
+stop_distance: 2.0
+3. 修改 modules/planning/traffic_rules/traffic_light/traffic_light.cc
+在核心逻辑文件中实现精确停车。我们将引入一个常量来定义首选停车距离，并修改停车决策的生成逻辑。
+
+C++
+
+/******************************************************************************
+ * Copyright 2019 The Apollo Authors. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
+
+/**
+ * @file
+ **/
+
+#include "modules/planning/traffic_rules/traffic_light/traffic_light.h"
+
+#include <memory>
+#include <string>
+#include <vector>
+
+#include "modules/common_msgs/planning_msgs/planning_internal.pb.h"
+#include "modules/common/vehicle_state/vehicle_state_provider.h"
+#include "modules/map/pnc_map/path.h"
+#include "modules/planning/planning_base/common/frame.h"
+#include "modules/planning/planning_base/common/planning_context.h"
+#include "modules/planning/planning_base/common/util/common.h"
+#include "modules/planning/planning_base/gflags/planning_gflags.h"
+
+namespace apollo {
+namespace planning {
+
+using apollo::common::Status;
+using apollo::hdmap::PathOverlap;
+using apollo::perception::TrafficLight;
+
+// MODIFICATION START: Define preferred stop distance for ISCC_2025
+// This value is chosen to be within the [1.5, 2.0] meter window,
+// providing a 20cm buffer for control and localization errors.
+namespace {
+constexpr double kPreferredStopDistance = 1.8;
+}  // namespace
+// MODIFICATION END
+
+bool TrafficLight::Init(const std::string& name,
+                        const std::shared_ptr<DependencyInjector>& injector) {
+  if (!TrafficRule::Init(name, injector)) {
+    return false;
+  }
+  // Load the config this task.
+  return TrafficRule::LoadConfig<TrafficLightConfig>(&config_);
+}
+
+Status TrafficLight::ApplyRule(Frame* const frame,
+                               ReferenceLineInfo* const reference_line_info) {
+  MakeDecisions(frame, reference_line_info);
+  return Status::OK();
+}
+
+void TrafficLight::MakeDecisions(Frame* const frame,
+                                 ReferenceLineInfo* const reference_line_info) {
+  CHECK_NOTNULL(frame);
+  CHECK_NOTNULL(reference_line_info);
+
+  if (!config_.enabled()) {
+    return;
+  }
+
+  const double adc_front_edge_s =
+      reference_line_info->AdcSlBoundary().end_s();
+
+  const std::vector<PathOverlap>& traffic_light_overlaps =
+      reference_line_info->reference_line().map_path().signal_overlaps();
+
+  for (const auto& traffic_light_overlap : traffic_light_overlaps) {
+    if (traffic_light_overlap.start_s <= adc_front_edge_s) {
+      continue;
+    }
+
+    const auto& signal_color =
+        frame->GetSignal(traffic_light_overlap.object_id).color();
+    ADEBUG << "traffic_light_overlap_id[" << traffic_light_overlap.object_id
+           << "] start_s[" << traffic_light_overlap.start_s << "] color["
+           << signal_color << "]";
+
+    // check if the traffic_light is still along reference line
+    if (!planning::util::CheckTrafficLightOnReferenceLine(
+            *reference_line_info, traffic_light_overlap.object_id)) {
+      continue;
+    }
+
+    if (signal_color == TrafficLight::GREEN) {
+      continue;
+    }
+
+    // get path lane info from pnc_map
+    const auto& path_lane_booundarys =
+        reference_line_info->Lanes().LaneBoundaries();
+    bool is_protected = false;
+    for (const auto& path_lane : path_lane_booundarys) {
+      if (path_lane.lane_id == traffic_light_overlap.object_id) {
+        is_protected = true;
+        break;
+      }
+    }
+
+    if (is_protected) {
+      const double stop_deceleration = planning::util::GetADCStopDeceleration(
+          injector_->vehicle_state(),
+          adc_front_edge_s, traffic_light_overlap.start_s);
+
+      if (stop_deceleration > config_.max_stop_deceleration()) {
+        AWARN << "stop deceleration is too large to be safe. "
+                 "stop_deceleration["
+              << stop_deceleration << "]";
+        continue;
+      }
+    }
+
+    // MODIFICATION START: Implement precision stop logic for ISCC_2025
+    // Use the configured stop_distance as the outer bound (e.g., 2.0m).
+    // Build the stop fence at the preferred distance (e.g., 1.8m) to
+    // maximize scoring potential while maintaining a safety buffer.
+    double stop_distance = kPreferredStopDistance;
+    if (stop_distance > config_.stop_distance()) {
+      AWARN << "Preferred stop distance " << kPreferredStopDistance
+            << " is greater than the configured max stop distance "
+            << config_.stop_distance() << ". Using configured value.";
+      stop_distance = config_.stop_distance();
+    }
+
+    const double stop_line_s = traffic_light_overlap.start_s;
+    const double stop_s = stop_line_s - stop_distance;
+    // MODIFICATION END
+
+    const std::string virtual_obstacle_id =
+        TRAFFIC_LIGHT_VO_ID_PREFIX + traffic_light_overlap.object_id;
+    const std::vector<std::string> wait_for_obstacle_ids;
+
+    ADEBUG << "Build a stop fence for traffic_light["
+           << traffic_light_overlap.object_id << "] at s[" << stop_s << "]";
+
+    planning::util::BuildStopDecision(
+        virtual_obstacle_id, stop_s, 0.0,
+        StopReasonCode::STOP_REASON_SIGNAL, wait_for_obstacle_ids,
+        "traffic_light", frame, reference_line_info);
+  }
+}
+
+}  // namespace planning
+}  // namespace apollo
+III. 红灯右转与约束超车的配置
+在实现了精确停车逻辑后，下一步是配置车辆在红灯时右转以及后续的借道超车行为。这些高级行为主要通过修改现有的场景和任务配置文件来实现，仅需对借道逻辑进行少量代码扩展以满足严格的横向距离约束。
+
+启用红灯右转功能
+此功能由 TrafficLightUnprotectedRightTurnScenario 场景控制。
+
+目标文件: modules/planning/scenarios/traffic_light_unprotected_right_turn/conf/scenario_conf.pb.txt 。   
+
+目标参数: enable_right_turn_on_red。
+
+修改: 将此参数设置为 true，以允许场景在红灯且安全的情况下生成右转轨迹。
+
+修改后的 scenario_conf.pb.txt
+Protocol Buffers
+
+start_traffic_light_scenario_distance: 5.0
+enable_right_turn_on_red: true
+max_valid_stop_distance: 2.0
+min_pass_s_distance: 3.0
+red_light_right_turn_stop_duration_sec: 3.0
+creep_timeout_sec: 10.0
+max_adc_speed_before_creep: 3.0
+creep_stage_config {
+  min_boundary_t: 6.0
+  ignore_max_st_min_t: 0.1
+  ignore_min_st_min_s: 15.0
+}
+调整借道任务以满足速度和距离约束
+转弯后，车辆进入 LaneFollowScenario 场景，其中的 LaneBorrowPath 任务负责处理超车。我们需要对此任务进行配置和微调，以满足竞赛的严格约束 。   
+
+1. 速度约束 (上限 5 m/s)
+目标文件: modules/planning/tasks/lane_borrow_path/conf/default_conf.pb.txt 。   
+
+目标参数: lane_borrow_max_speed，定义于 lane_borrow_path.proto 。   
+
+修改: 将此参数值设为 5.0，以直接限制车辆在执行借道绕行时的最高速度。
+
+2. 横向距离约束 (至少 1.0 米)
+默认的 LaneBorrowPath 任务配置中没有直接控制与特定障碍物横向缓冲区的参数。它通常依赖一个全局的 gflag (--static_obstacle_nudge_l_buffer)，这对于需要针对特定任务进行精确配置的竞赛场景来说不够灵活和可靠。
+
+为了实现一个健壮且自包含的解决方案，我们将为 LaneBorrowPath 任务新增一个专用的配置参数。
+
+步骤一: 修改 modules/planning/tasks/lane_borrow_path/proto/lane_borrow_path.proto
+
+在配置文件中增加一个新的参数 static_obstacle_lateral_buffer，用于定义借道时需要保持的最小横向距离。
+
+Protocol Buffers
+
+syntax = "proto2";
+
+import "modules/planning/planning_base/proto/piecewise_jerk_path_config.proto";
+
+package apollo.planning;
+
+message LaneBorrowPathConfig {
+  optional PiecewiseJerkPathConfig path_optimizer_config = 1;
+  optional bool is_allow_lane_borrowing = 2 [default = true];
+  // The max speed of adc condition triggering lane borrow
+  optional double lane_borrow_max_speed = 3 [default = 5.0];
+  // Determine if the obstacle is long-term parking
+  optional int64 long_term_blocking_obstacle_cycle_threshold = 4 [default = 3];
+  // MODIFICATION START: Add a specific buffer for lane borrow obstacles
+  // This buffer is the required clearance from the obstacle during a lane borrow maneuver.
+  optional double static_obstacle_lateral_buffer = 5 [default = 0.5];  // meters
+  // MODIFICATION END
+}
+步骤二: 修改 modules/planning/tasks/lane_borrow_path/lane_borrow_path.cc
+
+更新 C++ 代码以使用这个新的配置参数。在 DecidePathBounds 函数中，我们将使用此参数来调整为绕行障碍物生成的路径边界。
+
+C++
+
+// 在文件 modules/planning/tasks/lane_borrow_path/lane_borrow_path.cc 中
+
+//... (省略其他代码)
+
+bool LaneBorrowPath::DecidePathBounds(
+    std::vector<PathBoundary>* candidate_path_boundaries) {
+  //... (省略边界初始化代码)
+
+  // 3. Fine-tune the boundary based on static obstacles.
+  // MODIFICATION START: Use the new config parameter for lateral buffer
+  // The PathBoundsDeciderUtil will internally use this buffer to create a safe corridor.
+  // We pass the config value to the utility function.
+  if (!PathBoundsDeciderUtil::GetBoundaryFromStaticObstacles(
+          *reference_line_info_, init_sl_state_, config_.static_obstacle_lateral_buffer(),
+          &path_bound, &blocking_obstacle_id, &path_narrowest_width)) {
+    const std::string msg =
+        absl::StrCat("Failed to decide a final path boundary from static "
+                     "obstacles. Blocking obstacle ID: ",
+                     blocking_obstacle_id);
+    AERROR << msg;
+    return false;
+  }
+  // MODIFICATION END
+
+  //... (省略剩余代码)
+  return true;
+}
+
+//... (省略其他代码)
+注意: 上述代码修改假设 PathBoundsDeciderUtil::GetBoundaryFromStaticObstacles 函数可以接受一个额外的 lateral_buffer 参数。如果该工具函数不直接支持，另一种实现方式是在调用该函数前，手动"膨胀"阻塞障碍物的几何边界，但这会增加实现的复杂性。为了竞赛的简洁性和有效性，直接修改工具函数或在 LaneBorrowPath 任务内部围绕障碍物构建一个自定义边界是更可行的策略。此处为了清晰展示意图，我们假定可以向工具函数传递参数。
+
+步骤三: 修改 modules/planning/tasks/lane_borrow_path/conf/default_conf.pb.txt
+
+最后，在配置文件中设置我们新添加的参数以及速度限制。
+
+Protocol Buffers
+
+is_allow_lane_borrowing: true
+lane_borrow_max_speed: 5.0
+long_term_blocking_obstacle_cycle_threshold: 3
+# Set the lateral buffer to 1.0 meter as required by the competition rules.
+static_obstacle_lateral_buffer: 1.0
+
+path_optimizer_config {
+  l_weight: 1.0
+  dl_weight: 20.0
+  ddl_weight: 1000.0
+  dddl_weight: 50000.0
+  path_reference_l_weight: 100.0
+  lateral_derivative_bound_default: 2.0
+}
+IV. 场景与任务流水线集成
+确保所有修改的模块和配置能被规划系统正确加载和执行是至关重要的一步。这需要核查相关场景的流水线（pipeline）配置文件。
+
+验证 LaneFollowScenario 流水线
+转弯后，车辆将进入 LaneFollowScenario 场景。必须确保该场景的流水线中包含了 LANE_BORROW_PATH 任务，以便在遇到静止障碍物时能够触发超车逻辑。
+
+目标文件: modules/planning/scenarios/lane_follow/conf/pipeline.pb.txt 。   
+
+核查项: 在 LANE_FOLLOW_CRUISE 阶段中，LANE_BORROW_PATH 任务必须存在且被启用。根据 Apollo 的标准配置，该任务通常位于 LANE_FOLLOW_PATH 之后，作为一种备选的路径生成策略。
+
+验证 TrafficLightUnprotectedRightTurnScenario 流水线
+在交通灯路口，车辆处于 TrafficLightUnprotectedRightTurnScenario 场景。该场景的流水线必须包含 RULE_BASED_STOP_DECIDER 任务，用以处理由我们修改过的 TrafficLight 规则所生成的虚拟停车墙。
+
+目标文件: modules/planning/scenarios/traffic_light_unprotected_right_turn/conf/pipeline.pb.txt 。   
+
+核查项: RULE_BASED_STOP_DECIDER 任务必须存在且被启用。该任务负责将高优先级的停车决策（如红灯停车）转化为对速度规划器的约束。
+
+Apollo 的标准流水线配置通常已经包含了这些必要的任务。此步骤主要是为了进行双重确认，确保在任何自定义修改中没有意外禁用这些关键组件。
+
+V. 综合解决方案总结与验证协议
+本节对所有必要的修改进行汇总，并提供一个详细的测试方案，以确保所有功能点均按预期工作。
+
+修改项汇总
+代码与协议文件修改
+协议文件修改 (.proto):
+
+modules/planning/tasks/lane_borrow_path/proto/lane_borrow_path.proto: 新增 optional double static_obstacle_lateral_buffer 字段，用于定义超车时的横向安全距离。
+
+modules/planning/traffic_rules/traffic_light/proto/traffic_light.proto: 将 stop_distance 的默认值调整为 2.0。
+
+C++ 核心逻辑修改 (.cc):
+
+modules/planning/traffic_rules/traffic_light/traffic_light.cc: 在 MakeDecisions 函数中，修改停车决策逻辑，使用新的 kPreferredStopDistance (1.80米) 作为目标停车点，同时利用配置中的 stop_distance (2.0米) 作为硬性上限。
+
+modules/planning/tasks/lane_borrow_path/lane_borrow_path.cc: 修改 DecidePathBounds 函数，使其在计算路径边界时使用新增的 static_obstacle_lateral_buffer 配置参数。
+
+配置文件修改 (.pb.txt)
+modules/planning/traffic_rules/traffic_light/conf/default_conf.pb.txt: 将 stop_distance 设为 2.0，定义停车窗口的外边界。
+
+modules/planning/scenarios/traffic_light_unprotected_right_turn/conf/scenario_conf.pb.txt: 将 enable_right_turn_on_red 设为 true。
+
+modules/planning/tasks/lane_borrow_path/conf/default_conf.pb.txt: 将 lane_borrow_max_speed 设为 5.0，并将新增的 static_obstacle_lateral_buffer 设为 1.0。
+
+参数变更汇总表
+下表清晰地总结了所有关键参数的变更，便于快速查阅和实施。
+
+文件路径	参数	原始值 (假定)	新值	变更理由
+.../traffic_rules/traffic_light/conf/default_conf.pb.txt	stop_distance	1.0	2.0	将停车窗口的硬性上边界（2.0米）设为配置值。
+.../traffic_light_unprotected_right_turn/conf/scenario_conf.pb.txt	enable_right_turn_on_red	false	true	根据竞赛规则，启用红灯右转的核心功能。
+.../tasks/lane_borrow_path/conf/default_conf.pb.txt	lane_borrow_max_speed	5.0 (默认)	5.0	显式强制执行竞赛规则中的 5 m/s 速度上限。
+.../tasks/lane_borrow_path/conf/default_conf.pb.txt	static_obstacle_lateral_buffer	N/A (新增)	1.0	强制执行竞赛规则中要求的 1.0 米最小横向安全距离。
