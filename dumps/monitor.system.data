@@ -9,29 +9,29 @@ monitor
 CYBER_DEFAULT
 "
 mainboard_process_context_switches_involuntary_second : 5
-mainboard_process_context_switches_voluntary_second : 3102
-mainboard_process_cpu_usage : 0.126
-mainboard_process_cpu_usage_system : 0.091
-mainboard_process_cpu_usage_user : 0.035
+mainboard_process_context_switches_voluntary_second : 2973
+mainboard_process_cpu_usage : 0.127
+mainboard_process_cpu_usage_system : 0.089
+mainboard_process_cpu_usage_user : 0.038
 mainboard_process_disk_read_bytes_second : 0
-mainboard_process_disk_write_bytes_second : 2456
-mainboard_process_faults_major : 490
+mainboard_process_disk_write_bytes_second : 2457
+mainboard_process_faults_major : 494
 mainboard_process_faults_minor_second : 0
 mainboard_process_fd_count : 111
 mainboard_process_inblocks_second : 0
-mainboard_process_io_read_bytes_second : 19938
-mainboard_process_io_read_second : 381
-mainboard_process_io_write_bytes_second : 860
-mainboard_process_io_write_second : 1
-mainboard_process_memory_data_and_stack : 549330944
-mainboard_process_memory_resident : 75366400
+mainboard_process_io_read_bytes_second : 19860
+mainboard_process_io_read_second : 358
+mainboard_process_io_write_bytes_second : 901
+mainboard_process_io_write_second : 2
+mainboard_process_memory_data_and_stack : 550379520
+mainboard_process_memory_resident : 75628544
 mainboard_process_memory_shared : 56623104
 mainboard_process_memory_text : 331776
-mainboard_process_memory_virtual : 842137600
+mainboard_process_memory_virtual : 843186176
 mainboard_process_nice : 0
 mainboard_process_outblocks_second : 5
 mainboard_process_priority : 20
 mainboard_process_thread_count : 35
-mainboard_process_uptime : 6082.323772
+mainboard_process_uptime : 7052.574446
 mainboard_process_username : "unknown (No such device or address)"
 mainboard_process_work_dir : "/apollo"
