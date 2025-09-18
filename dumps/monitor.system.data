@@ -8,20 +8,20 @@ monitor
 -s
 CYBER_DEFAULT
 "
-mainboard_process_context_switches_involuntary_second : 13
-mainboard_process_context_switches_voluntary_second : 3422
-mainboard_process_cpu_usage : 0.058
+mainboard_process_context_switches_involuntary_second : 11
+mainboard_process_context_switches_voluntary_second : 3309
+mainboard_process_cpu_usage : 0.060
 mainboard_process_cpu_usage_system : 0.039
-mainboard_process_cpu_usage_user : 0.019
+mainboard_process_cpu_usage_user : 0.021
 mainboard_process_disk_read_bytes_second : 0
 mainboard_process_disk_write_bytes_second : 1638
 mainboard_process_faults_major : 18589
 mainboard_process_faults_minor_second : 0
-mainboard_process_fd_count : 111
+mainboard_process_fd_count : 108
 mainboard_process_inblocks_second : 0
-mainboard_process_io_read_bytes_second : 22563
+mainboard_process_io_read_bytes_second : 22542
 mainboard_process_io_read_second : 439
-mainboard_process_io_write_bytes_second : 824
+mainboard_process_io_write_bytes_second : 816
 mainboard_process_io_write_second : 0
 mainboard_process_memory_data_and_stack : 561909760
 mainboard_process_memory_resident : 62115840
@@ -32,6 +32,6 @@ mainboard_process_nice : 0
 mainboard_process_outblocks_second : 3
 mainboard_process_priority : 20
 mainboard_process_thread_count : 35
-mainboard_process_uptime : 63275.773863
+mainboard_process_uptime : 63565.842140
 mainboard_process_username : "unknown (No such device or address)"
 mainboard_process_work_dir : "/apollo"
