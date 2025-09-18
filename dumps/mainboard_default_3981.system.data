@@ -10,17 +10,17 @@ CYBER_DEFAULT
 --disable_plugin_autoload
 "
 mainboard_process_context_switches_involuntary_second : 2
-mainboard_process_context_switches_voluntary_second : 2423
+mainboard_process_context_switches_voluntary_second : 2578
 mainboard_process_cpu_usage : 0.107
-mainboard_process_cpu_usage_system : 0.084
-mainboard_process_cpu_usage_user : 0.023
+mainboard_process_cpu_usage_system : 0.080
+mainboard_process_cpu_usage_user : 0.027
 mainboard_process_disk_read_bytes_second : 0
 mainboard_process_disk_write_bytes_second : 1228
 mainboard_process_faults_major : 132
 mainboard_process_faults_minor_second : 0
 mainboard_process_fd_count : 110
 mainboard_process_inblocks_second : 0
-mainboard_process_io_read_bytes_second : 569
+mainboard_process_io_read_bytes_second : 568
 mainboard_process_io_read_second : 5
 mainboard_process_io_write_bytes_second : 533
 mainboard_process_io_write_second : 0
@@ -33,6 +33,6 @@ mainboard_process_nice : 0
 mainboard_process_outblocks_second : 2
 mainboard_process_priority : 20
 mainboard_process_thread_count : 34
-mainboard_process_uptime : 7052.128642
+mainboard_process_uptime : 7082.135944
 mainboard_process_username : "unknown (No such device or address)"
 mainboard_process_work_dir : "/apollo"
