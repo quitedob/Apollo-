@@ -1,0 +1,327 @@
+项目快照 & 现状诊断（从你上传的仓库/日志里抓出来的关键信息）
+
+你的公共道路场景配置里，已经包含了本题需要的关键场景：STOP_SIGN_UNPROTECTED、TRAFFIC_LIGHT_UNPROTECTED_RIGHT_TURN、TRAFFIC_LIGHT_PROTECTED 等（说明：框架具备能力，主要做“竞赛化”参数与决策逻辑调优即可）。
+
+planning_planners_public_road_c…
+
+交通灯交规插件已在工程中，配置项里明确了 stop_distance 的语义与测量参考点（从“后轴中心”到停止线，= 期望保险杠距离 + 车辆前悬）。这正是我们要用来满足“1.5–2.0 m / 2.0–2.5 m”评分线的关键参数。
+
+modules_All
+
+你现在的编译失败集中在 modules/planning/traffic_rules/traffic_light/traffic_light.cc：
+
+warning: unused variable 'stop_s'（第 181 行），
+
+以及 expected declaration before '}' token（201/203/204 行），是典型的大括号不匹配/额外 } 造成的全局作用域中断。
+
+log
+
+控制主进程的延迟统计显示：规划传输 99 分位延迟 ~85,459（单位按 Apollo bvar 习惯多为微秒，即约 85ms），Timer 组件 99 分位最高可到 ~17ms、最大 ~53ms，提示“周期性波峰”存在，后续限速/急停策略要留更大冗余。
+
+dumps_All
+
+五大赛题—目标约束 & 策略设计（含权威出处）
+总体规划管线（Mermaid）
+flowchart LR
+  A[感知/地图: 交通灯/停牌/锥桶/车位/静态ROI] --> B[场景管理器 Scenario Dispatcher]
+  B -->|StopSign overlap| S1[StopSign Unprotected]
+  B -->|TL overlap + 信号| S2[TrafficLight (含右转放行)]
+  B -->|车道变窄/施工ROI| S3[Narrow & Construction]
+  B -->|停车命令/车位ROI| S4[Open Space Parking]
+  S1 --> P[EM/Lattice 路径-速度联合规划]
+  S2 --> P
+  S3 --> P
+  S4 --> OSP[Open Space Planner (Hybrid A* ➜ 优化器)]
+  P --> C[控制]
+  OSP --> C
+
+赛题一：ISCC_2025_交通标志（停牌 STOP）
+
+硬约束：在停止线前 2.0–2.5 m 完全停车，不越线，确认安全后通行。
+落地做法
+
+参数侧：将 StopSign / TrafficLight 的 stop_distance 配到目标距离 + 车辆前悬（因为 Apollo 定义的是“后轴中心到停止线”）——例如车辆前悬 1.0 m，想让保险杠距线 2.2 m，则 stop_distance = 3.2 m。该测量口径来自插件 proto 注释。
+
+modules_All
+
+流程侧：启用/确认 STOP_SIGN_UNPROTECTED 场景，遵循 Apollo 的 Pre-Stop ➜ Creep ➜ Proceed 状态机，防重复触发（打 “done” 标记）。官方场景代码与阶段实现可参考 Apollo 9.0 文档（StopSign 场景/Pre-Stop Stage）。
+apollo.baidu.com
++1
+
+调参建议：将 stop window 定在 2.2 m（中值+余量），以覆盖定位/制动误差。
+
+赛题二：ISCC_2025_交通灯（含红灯右转、借道绕行）
+
+硬约束
+
+直行遇红灯：停止线前 1.5–2.0 m 停车；
+
+红灯 可右转；右转途中若直行道前车停驶需借道绕行；
+
+绕行：与障碍物横向距离 ≥ 1 m；借道速度 ≤ 5 m/s；
+
+未达 1.5–2.0 m 扣 20 分；横向 <1 m 扣 20 分；每超 1 m/s 每帧扣 2 分。
+这些评分口径在 Apollo 竞赛与经验贴中均有详述。
+apollo.baidu.com
+
+落地做法
+
+Red 停车距离：在 TrafficLight 交规插件里将 stop_distance 设为 1.7 m + 前悬（同样按“后轴中心”定义换算），稳居评分窗口中心；插件配置与加载方式见 TrafficLight 插件文档。
+
+modules_All
+
+红灯右转放行：启用 TrafficLightUnprotectedRightTurn 场景（你工程的公共道路配置已包含）。要求在 Stop 后进入 Creep 阶段，检测对向/横穿目标空隙，满足让行条件即通行。
+
+planning_planners_public_road_c…
+
+ 
+apollo.baidu.com
++1
+
+借道绕行（≥1 m、≤5 m/s）：
+
+在 Path 决策侧给目标障碍物外扩一个 1.0 m 的“安全缓冲带”，CollisionChecker/PathBound 构造时等价为障碍胖化；速度侧在 Speed DP/QP 的速度上界加入 5 m/s 约束（只在“绕行窗”内生效）。EM 规划器（DP+QP 的“路径-速度交替优化”）天然支持这类规则注入。
+arXiv
+
+触发条件：直行道前方障碍停车/低速且 right_turn 正在执行 ➜ 进入“借道子策略”；退出条件：安全通过/回到目标车道。
+
+评分保护：若预测到停车距离即将低于 1.5 m 或绕行速度会超过 5 m/s，提前在规划阶段插入“停止墙/限速段”，强制满足评分约束（Apollo 交通规则框架支持注入 stop fence 与临时限速）。
+apollo.baidu.com
+
+赛题三：xh_2025_狭窄道路通行
+
+硬约束：狭窄路段安全通过，碰撞或超时即 0 分。
+落地做法
+
+约束建模：将车道可通行带收缩为狭窄走廊（来自施工/静态障碍 ROI），在 PathBound 里缩小边界，在速度域给出更低的纵向加速度/曲率约束。EM/Lattice 都可用；高速直道用 Lattice，复杂慢速段优先 EM。
+arXiv
+
+行为策略：优先“跟驰-微侧移（nudge）”，不足时进入“临时借道-回归”子场景；整个狭窄 ROI 内设全局速度帽（如 4–6 m/s，按你车控能力校准）。
+
+赛题四：xh_2025_施工区域通行（锥桶 + 限速 30 km/h）
+
+硬约束：区域内限速 30 km/h（≈ 8.33 m/s），超速每 1 m/s 每帧扣 2 分；驶入施工区禁入区域计 0 分。
+落地做法
+
+在感知侧将锥桶/围挡融合为静态 ROI；在交规模块里注入一个临时限速规则（进入 ROI ➜ 将参考线限速 min(current, 8.3)；离开 ROI 取消）。
+
+规则载入方式可复用官方交规插件注册机制（traffic_rule_config.pb.txt），和 ReferenceLineEnd 等插件的启用方法一致。
+apollo.baidu.com
+
+赛题五：xh_2025_自主泊车（90 s 内、最近车位、禁行区不可入）
+
+硬约束：90s 内完成；压线扣分；禁行区（红色区域）为 0 分——官方赛题说明给了禁行区示意。
+apollo.baidu.com
+
+落地做法（Open Space Planner）
+
+方案：Hybrid A* 粗路径 ➜ 优化器（Ipopt/OSQP/迭代锚点）平滑与动力学约束；Apollo 的 Open Space 文档与社区文章给了配置模板与调参位。
+daobook.github.io
++1
+
+车位选择：在入口处以 HDMap 车位 ROI 做搜索，按路径长度/驶入可行性排序选择最近（社区“泊车场景”示例提供了 BestParkingSpace 模板与 pipeline）。
+apollo.baidu.com
+
+90s 保护：在场景上下文里维护倒计时，超过阈值触发“放弃/回退”策略（不得驶入禁行区）。
+
+关键参数：Open Space 的 ipopt、iterative_anchoring_smoother、s-curve 等都可在示例里拷贝起步（注意最大速度/加速度/jerk）。
+apollo.baidu.com
+
+一次性“竞赛化”改造清单（含文件路径与最小改动示例）
+1) 交通灯交规：停车距离 & 红灯右转 & 借道限速
+
+文件：modules/planning/traffic_rules/traffic_light/conf/default_conf.pb.txt
+设置（示例——请按车辆前悬换算）：
+
+# 文件: modules/planning/traffic_rules/traffic_light/conf/default_conf.pb.txt
+# 目标：红灯直行停车线前 1.5–2.0m（建议 1.7m）——注意 Apollo 口径是“后轴中心到停止线”
+enabled: true
+stop_distance: 2.7   # = 车辆前悬(1.0m) + 1.7m（评分窗中值）
+max_stop_deceleration: 4.0
+
+
+（该配置项与加载方式见你工程的 TrafficLight 插件文档段落）
+
+modules_All
+
+文件：modules/planning/planning_component/conf/traffic_rule_config.pb.txt
+确保加载：
+
+rule {
+  name: "TRAFFIC_LIGHT"
+  type: "TrafficLight"
+}
+
+
+（官方示例同结构）
+
+modules_All
+
+（可选）代码修复与增强：
+文件：modules/planning/traffic_rules/traffic_light/traffic_light.cc
+问题修复点：
+
+第 181 行：删除或使用未用变量 stop_s；
+
+第 201/203/204 行：修正多余 }；这三个报错正来自你当前源码。
+
+log
+
+仅修改的函数版本（定位：MakeDecisions(...)，约在 160–210 行；以下示例演示“红灯右转 + 借道限速 + 停车距离换算”的核心逻辑。请按你文件的实际行号替换，修正多余括号）：
+
+// 文件: modules/planning/traffic_rules/traffic_light/traffic_light.cc
+// 函数: apollo::planning::TrafficLight::MakeDecisions(...)
+// 行号: ~170-210（根据你本地源码，181行为未用变量，201/203/204为多余右括号）
+# definite_CRTCURE.NO-WARNING
+// 目的：竞赛化规则落地——(1) 红灯直行停车 1.5–2.0m；(2) 红灯右转在让行安全下放行；
+//      (3) 借道绕行时横向≥1m，速度≤5 m/s；(4) 修复未用变量/括号错误
+
+void TrafficLight::MakeDecisions(Frame* frame,
+                                 ReferenceLineInfo* const rlinfo) {
+  // ① 计算到停止线的s，换算“后轴中心→停止线”的停车距离
+  const double stop_line_s = GetStopLineS(*rlinfo);   // # 你已有工具函数
+  const auto& veh = injector_->vehicle_state();
+  const double front_edge_to_center =
+      common::VehicleConfigHelper::GetConfig().vehicle_param().front_edge_to_center();
+  const double desired_bumper_dist = 1.7;  // # 红灯评分窗中值(1.5~2.0)
+  const double stop_distance = desired_bumper_dist + front_edge_to_center;
+
+  // （原先未用变量的修复：直接使用）
+  const double stop_s = stop_line_s - stop_distance;  // # 直行红灯停车点
+  BuildStopDecisionAt(rlinfo, stop_s, "TL_RED_STOP"); // # 注入停止墙
+
+  // ② 红灯右转放行：进入场景或检测右转拓扑，做Creep+让行
+  if (IsRightTurnOnRed(*rlinfo) && TrafficLightIsRed(*frame)) {
+    if (GapAcceptSafe(*frame, *rlinfo)) {
+      ClearStopDecision(rlinfo, "TL_RED_STOP");   // # 移除停止墙
+      AllowProceedWithCreep(rlinfo);              // # 低速爬行通过
+    }
+  }
+
+  // ③ 借道绕行限制：在右转驶入直行道过程中，如前方目标停驶，限定横向≥1m与速度≤5 m/s
+  if (NeedBypassStoppedVehicle(*frame, *rlinfo)) {
+    InflateObstacleLateral(*rlinfo, /*inflate_m=*/1.0); // # 胖化障碍，等价横向间距≥1m
+    LimitSpeedInWindow(*rlinfo, /*v_max=*/5.0, /*tag=*/"BYPASS_5MS");
+  }
+
+  // … 其他判定/打标逻辑 …
+
+  // ④ 注意：确保函数/命名空间的右括号**只有一个**，删除多余的 “}”
+}
+
+
+参考：你的日志即报出未用变量与多余右括号导致的全局作用域错误。
+
+log
+
+
+TrafficLight 插件与配置项位置说明见你工程内 README 段落。
+
+modules_All
+
+2) 停牌交规：2.0–2.5 m 停车
+
+文件：modules/planning/traffic_rules/stop_sign/conf/default_conf.pb.txt（若无则新增同路径）
+示例：
+
+enabled: true
+stop_distance: 3.2   # = 前悬(1.0m) + 2.2m（评分窗中值），请按你的车型前悬调整
+
+
+并确认场景启用：你的公共道路配置已含 STOP_SIGN_UNPROTECTED。
+
+planning_planners_public_road_c…
+
+
+Apollo 场景实现参考：StopSign 场景阶段文档。
+apollo.baidu.com
++1
+
+3) 狭窄道路 & 施工区：限速 + 走廊收缩 + 锥桶禁入保护
+
+临时限速插件（亦可直接在 Path/Speed 优化前设 reference_line 限速帽）：进入施工 ROI ➜ min(current_limit, 8.3 m/s)；离开 ROI 取消。使用方法与官方交规插件一致。
+apollo.baidu.com
+
+PathBound 收缩：在狭窄 ROI 下将 lateral bound 缩小（如 ±0.2–0.4 m），并适当调高曲率惩罚。
+
+OpenSpace 仅用于窄路极端机动（必要时），一般 EM/Lattice 即可。
+arXiv
+
+4) 自主泊车（90 s + 禁行区不入）
+
+启用/仿制社区示例 BestParkingSpace 场景：含 pipeline、ROI Decider、Open Space Provider、Ipopt 配置。
+apollo.baidu.com
+
+Open Space 调参起点：按示例里的 ipopt_config / iterative_anchoring_smoother / s-curve 参数起步（见文中配置片段）。
+apollo.baidu.com
+
+禁行区：按官方赛题说明文档（ID 1301）的红区图，注入“不可进入多边形”到 ROI，违反即放弃。
+apollo.baidu.com
+
+常见编译/集成错误清单（如何规避）
+
+括号/命名空间不匹配 ➜ 直接导致 expected declaration before '}' token（你现在就命中）。修复：对齐函数、namespace planning、namespace apollo 的闭合。
+
+log
+
+未使用变量 在部分目标上会升级为错误（你命中的 stop_s），务必使用或删除。
+
+log
+
+第三方头文件的告警（如 boost/cyber 的 -Wsign-compare）通常不是错误，但建议不要改上游头文件；在你代码处以 size_t/static_cast 对齐类型可消告警。
+
+log
+
+插件依赖/BUILD 泄漏：新增交规/场景后，确保 BUILD 里 deps 覆盖 planning_interface_base、proto 等（TrafficLight 的 BUILD 示例可参考你工程内同名目录）。
+
+modules_All
+
+规划器选择与初始化：Lattice/EM 插件注册要保持一致（你工程里已有 CYBER_PLUGIN_MANAGER_REGISTER_PLUGIN），新增场景不要忘了 pipeline。
+
+modules_All
+
+编译负载与卡死：官方建议的分治编译方法可参考社区笔记（buildtool build -p modules/planning -j 4 -m 0.5）。
+CSDN博客
+
+验证与评分对齐（最重要的 4 项指标）
+
+停止线距离（停牌 2.0–2.5 m / 红灯直行 1.5–2.0 m）：在规划模块加打印 & Dreamview 上查看 Stop fence 位姿，误差 < ±0.2 m。
+apollo.baidu.com
+
+红灯右转：Creep 阶段触发阈值、对向/横穿空隙判断与让行逻辑稳定，避免“二次停”或“安全模式触发”。
+GitHub
+
+借道绕行：路径上障碍“胖化 1.0 m”等价横向距离 ≥1 m；速度窗口强制 ≤5 m/s。
+apollo.baidu.com
+
+泊车：90 s 内完成；禁行区不入（以多边形 ROI 确认）；Open Space 失败兜底回退。
+apollo.baidu.com
+
+你现在最应先做的两步
+
+把编译错误清掉（traffic_light.cc）：按上面的函数示例，修复未用变量与多余 “}”，然后 buildtool build -p modules/planning。报错行位来自你的日志：181/201/203/204。
+
+Apollo--main_All
+
+按评分窗设置 stop_distance（换算口径见 proto 注释），先把“停车距离得分”吃满，再逐步开启右转/借道。
+
+modules_All
+
+参考 / 进一步阅读
+
+Apollo Stop Sign & Traffic Light 场景与插件用法，含 Unprotected Right Turn 场景接口。
+apollo.baidu.com
++2
+apollo.baidu.com
++2
+
+EM 规划器论文（Apollo 官方）：DP+QP 路径-速度交替优化框架。
+arXiv
+
+Open Space Planner（Hybrid A* ➜ 优化器），社区泊车场景模板与详细配置。
+daobook.github.io
++1
+
+赛事评分口径（交通灯、泊车禁行区）：Apollo 社区文章。
+apollo.baidu.com
++1
