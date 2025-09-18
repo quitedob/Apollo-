@@ -4,35 +4,35 @@ mainboard_process_cmdline : "mainboard
 -d
 modules/studio_connector/studio_connector.dag
 -p
-mainboard_default_4981
+mainboard_default_4043
 -s
 CYBER_DEFAULT
 --disable_plugin_autoload
 "
-mainboard_process_context_switches_involuntary_second : 11
-mainboard_process_context_switches_voluntary_second : 2162
-mainboard_process_cpu_usage : 0.040
-mainboard_process_cpu_usage_system : 0.023
-mainboard_process_cpu_usage_user : 0.017
+mainboard_process_context_switches_involuntary_second : 13
+mainboard_process_context_switches_voluntary_second : 1979
+mainboard_process_cpu_usage : 0.063
+mainboard_process_cpu_usage_system : 0.045
+mainboard_process_cpu_usage_user : 0.018
 mainboard_process_disk_read_bytes_second : 0
-mainboard_process_disk_write_bytes_second : 1227
-mainboard_process_faults_major : 4249
+mainboard_process_disk_write_bytes_second : 1224
+mainboard_process_faults_major : 149
 mainboard_process_faults_minor_second : 0
-mainboard_process_fd_count : 114
+mainboard_process_fd_count : 111
 mainboard_process_inblocks_second : 0
-mainboard_process_io_read_bytes_second : 575
+mainboard_process_io_read_bytes_second : 521
 mainboard_process_io_read_second : 5
-mainboard_process_io_write_bytes_second : 535
+mainboard_process_io_write_bytes_second : 533
 mainboard_process_io_write_second : 0
-mainboard_process_memory_data_and_stack : 586952704
-mainboard_process_memory_resident : 32374784
-mainboard_process_memory_shared : 15204352
+mainboard_process_memory_data_and_stack : 583811072
+mainboard_process_memory_resident : 18874368
+mainboard_process_memory_shared : 14548992
 mainboard_process_memory_text : 331776
-mainboard_process_memory_virtual : 1028395008
+mainboard_process_memory_virtual : 1025253376
 mainboard_process_nice : 0
 mainboard_process_outblocks_second : 2
 mainboard_process_priority : 20
 mainboard_process_thread_count : 38
-mainboard_process_uptime : 67705.795330
+mainboard_process_uptime : 4419.981649
 mainboard_process_username : "unknown (No such device or address)"
 mainboard_process_work_dir : "/apollo"

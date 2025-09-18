@@ -141,6 +141,47 @@ Status SpeedBoundsDecider::Process(
   return Status::OK();
 }
 
+// MODIFICATION FOR ISCC 2025 CONSTRUCTION ZONE
+// 为施工区域添加30km/h限速的实现
+Status SpeedBoundsDecider::AddSpeedLimitFromConstructionZone(
+    SpeedLimit* const speed_limit) {
+  CHECK_NOTNULL(speed_limit);
+  
+  // 检查是否检测到施工区域 - 使用boost::optional的正确访问方式
+  const auto& zone_info_opt = reference_line_info_->construction_zone_info();
+  if (!zone_info_opt) {
+    ADEBUG << "[ISCC_SpeedBounds] No construction zone detected";
+    return Status::OK();
+  }
+
+  // 获取施工区域信息
+  const auto& zone_info = *zone_info_opt;
+  const double start_s = zone_info.start_s;
+  const double end_s = zone_info.end_s;
+  const double speed_limit_mps = zone_info.speed_limit_mps;
+
+  AINFO << "[ISCC_SpeedBounds] Applying 30km/h construction zone speed limit: "
+        << speed_limit_mps << " m/s from s=" << start_s << " to s=" << end_s;
+
+  // 使用默认缓冲区值简化处理
+  const double slowdown_buffer = 5.0;  // 施工区域前5米开始减速
+  const double speedup_buffer = 3.0;   // 施工区域后3米开始加速
+
+  const double effective_start_s = std::max(0.0, start_s - slowdown_buffer);
+  const double effective_end_s = end_s + speedup_buffer;
+
+  // 应用速度限制 - 在开始和结束位置添加离散点
+  speed_limit->AppendSpeedLimit(effective_start_s, speed_limit_mps);
+  speed_limit->AppendSpeedLimit(effective_end_s, speed_limit_mps);
+
+  ADEBUG << "[ISCC_SpeedBounds] Added construction zone speed limit of "
+         << speed_limit_mps << " m/s from s=" << effective_start_s
+         << " to s=" << effective_end_s;
+  
+  return Status::OK();
+}
+// MODIFICATION FOR CONSTRUCTION ZONE
+
 double SpeedBoundsDecider::SetSpeedFallbackDistance(
     PathDecision *const path_decision) {
   // Set min_s_on_st_boundaries to guide speed fallback.
@@ -222,8 +263,8 @@ void SpeedBoundsDecider::RecordSTGraphDebug(
   }
 }
 
-// MODIFICATION FOR CONSTRUCTION ZONE
-common::Status SpeedBoundsDecider::AddSpeedLimitFromConstructionZone(
+}  // namespace planning
+}  // namespace apollo
     SpeedLimit* const speed_limit) {
   DCHECK_NOTNULL(speed_limit);
   const auto& zone_info_opt = reference_line_info_->construction_zone_info();
@@ -255,3 +296,4 @@ common::Status SpeedBoundsDecider::AddSpeedLimitFromConstructionZone(
 
 }  // namespace planning
 }  // namespace apollo
+

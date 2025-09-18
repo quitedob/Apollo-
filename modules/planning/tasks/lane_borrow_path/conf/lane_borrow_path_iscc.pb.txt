@@ -1,0 +1,73 @@
+# ISCC 2025竞赛专用的借道路径配置文件
+# 针对自动泊车和障碍物绕行功能进行优化
+
+# 启用借道功能
+is_allow_lane_borrowing: true
+
+# ISCC竞赛要求：借道避障时车速不得超过5m/s
+lane_borrow_max_speed: 5.0
+
+# 缩短长期阻塞障碍物的判断时间（从默认的10个周期减少到6个周期）
+long_term_blocking_obstacle_cycle_threshold: 6
+
+# ISCC竞赛要求：绕行时与障碍物横向距离至少保持1米
+static_obstacle_lateral_buffer: 1.0
+
+# 施工区域配置
+construction_zone_config {
+  # 检测施工区域的最小锥桶数量（从默认的3个减少到2个）
+  min_cones_for_detection: 2
+  # 锥桶之间的最大间隔距离
+  max_cone_gap_m: 15.0
+  # 施工区域的速度限制（30 km/h）
+  speed_limit_kph: 30.0
+}
+
+# 路径优化器配置
+path_optimizer_config {
+  # 路径参考线权重
+  path_reference_l_weight: 0.8
+  # 平滑度权重
+  path_l_cost_param_l0: 1.0
+  path_l_cost_param_dl: 10.0
+  path_l_cost_param_ddl: 1000.0
+  # 碰撞成本权重
+  path_collision_cost_l_weight: 1000.0
+}
+
+
+# 启用借道功能
+is_allow_lane_borrowing: true
+
+# ISCC竞赛要求：借道避障时车速不得超过5m/s
+lane_borrow_max_speed: 5.0
+
+# 缩短长期阻塞障碍物的判断时间（从默认的10个周期减少到6个周期）
+long_term_blocking_obstacle_cycle_threshold: 6
+
+# ISCC竞赛要求：绕行时与障碍物横向距离至少保持1米
+static_obstacle_lateral_buffer: 1.0
+
+# 施工区域配置
+construction_zone_config {
+  # 检测施工区域的最小锥桶数量（从默认的3个减少到2个）
+  min_cones_for_detection: 2
+  # 锥桶之间的最大间隔距离
+  max_cone_gap_m: 15.0
+  # 施工区域的速度限制（30 km/h）
+  speed_limit_kph: 30.0
+}
+
+# 路径优化器配置
+path_optimizer_config {
+  # 路径参考线权重
+  path_reference_l_weight: 0.8
+  # 平滑度权重
+  path_l_cost_param_l0: 1.0
+  path_l_cost_param_dl: 10.0
+  path_l_cost_param_ddl: 1000.0
+  # 碰撞成本权重
+  path_collision_cost_l_weight: 1000.0
+}
+
+

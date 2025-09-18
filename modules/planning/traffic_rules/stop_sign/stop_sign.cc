@@ -26,6 +26,7 @@
 #include "modules/planning/planning_base/common/frame.h"
 #include "modules/planning/planning_base/common/planning_context.h"
 #include "modules/planning/planning_base/common/util/common.h"
+#include "modules/common/configs/vehicle_config_helper.h"
 
 namespace apollo {
 namespace planning {
@@ -73,6 +74,19 @@ void StopSign::MakeDecisions(Frame* const frame,
       continue;
     }
 
+    // MODIFICATION FOR ISCC 2025: Implement precision stop for stop sign (2.0-2.5m)
+    // 计算车辆前端到后轴中心的距离补偿
+    const auto& vehicle_config = common::VehicleConfigHelper::GetConfig();
+    double front_edge_to_center = vehicle_config.vehicle_param().front_edge_to_center();
+    
+    // ISCC竞赛要求：停车在停止线前2.0-2.5米，选择2.25米作为目标
+    double target_stop_distance = 2.25;
+    double adjusted_stop_distance = target_stop_distance + front_edge_to_center;
+    
+    AINFO << "[ISCC_StopSign] Precision stop: target=" << target_stop_distance 
+          << "m, front_edge_compensation=" << front_edge_to_center 
+          << "m, final_stop_distance=" << adjusted_stop_distance << "m";
+
     // build stop decision
     ADEBUG << "BuildStopDecision: stop_sign[" << stop_sign_overlap.object_id
            << "] start_s[" << stop_sign_overlap.start_s << "]";
@@ -82,7 +96,21 @@ void StopSign::MakeDecisions(Frame* const frame,
         stop_sign_status.wait_for_obstacle_id().begin(),
         stop_sign_status.wait_for_obstacle_id().end());
     util::BuildStopDecision(
-        virtual_obstacle_id, stop_sign_overlap.start_s, config_.stop_distance(),
+        virtual_obstacle_id, stop_sign_overlap.start_s, adjusted_stop_distance,
+        StopReasonCode::STOP_REASON_STOP_SIGN, wait_for_obstacle_ids, Getname(),
+        frame, reference_line_info);
+  }
+}
+
+}  // namespace planning
+}  // namespace apollo
+
+        STOP_SIGN_VO_ID_PREFIX + stop_sign_overlap.object_id;
+    const std::vector<std::string> wait_for_obstacle_ids(
+        stop_sign_status.wait_for_obstacle_id().begin(),
+        stop_sign_status.wait_for_obstacle_id().end());
+    util::BuildStopDecision(
+        virtual_obstacle_id, stop_sign_overlap.start_s, adjusted_stop_distance,
         StopReasonCode::STOP_REASON_STOP_SIGN, wait_for_obstacle_ids, Getname(),
         frame, reference_line_info);
   }

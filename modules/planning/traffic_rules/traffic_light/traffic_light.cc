@@ -27,6 +27,7 @@
 #include "modules/common_msgs/planning_msgs/planning_internal.pb.h"
 #include "modules/common/util/util.h"
 #include "modules/common/vehicle_state/vehicle_state_provider.h"
+#include "modules/common/configs/vehicle_config_helper.h"
 #include "modules/map/pnc_map/path.h"
 #include "modules/planning/planning_base/common/frame.h"
 #include "modules/planning/planning_base/common/planning_context.h"
@@ -160,20 +161,23 @@ void TrafficLight::MakeDecisions(Frame* const frame,
       continue;
     }
 
-    // MODIFICATION START: Implement precision stop logic for ISCC_2025
-    // Use the configured stop_distance as the outer bound (e.g., 2.0m).
-    // Build the stop fence at the preferred distance (e.g., 1.8m) to
-    // maximize scoring potential while maintaining a safety buffer.
-    double stop_distance = kPreferredStopDistance;
-    if (stop_distance > config_.stop_distance()) {
-      AWARN << "Preferred stop distance " << kPreferredStopDistance
-            << " is greater than the configured max stop distance "
-            << config_.stop_distance() << ". Using configured value.";
-      stop_distance = config_.stop_distance();
-    }
+    // MODIFICATION FOR ISCC 2025: Implement precision stop logic for traffic light (1.5-2.0m)
+    // 计算车辆前端到后轴中心的距离补偿
+    const auto& vehicle_config = common::VehicleConfigHelper::GetConfig();
+    double front_edge_to_center = vehicle_config.vehicle_param().front_edge_to_center();
+    
+    // ISCC竞赛要求：停车在停止线前1.5-2.0米，选择1.75米作为目标
+    double target_stop_distance = 1.75;
+    double adjusted_stop_distance = target_stop_distance + front_edge_to_center;
+    
+    // 确保不超过配置的最大停车距离
+    double stop_distance = std::min(adjusted_stop_distance, config_.stop_distance() + front_edge_to_center);
+    
+    AINFO << "[ISCC_TrafficLight] Precision stop: target=" << target_stop_distance 
+          << "m, front_edge_compensation=" << front_edge_to_center 
+          << "m, final_stop_distance=" << stop_distance << "m";
 
     const double stop_line_s = traffic_light_overlap.start_s;
-    const double stop_s = stop_line_s - stop_distance;
     // MODIFICATION END
 
     // build stop decision
@@ -193,3 +197,4 @@ void TrafficLight::MakeDecisions(Frame* const frame,
 
 }  // namespace planning
 }  // namespace apollo
+

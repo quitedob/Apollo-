@@ -1,84 +1,63 @@
-WARNING: The following rc files are no longer being read, please transfer their contents or import their path into one of the standard rc files:
-/apollo_workspace/tools/bazel.rc
-(06:39:18) INFO: Current date is 2025-09-18
-(06:39:18) INFO: Analyzed target //dev/buildtool/mock:mock_install_src (102 packages loaded, 405 targets configured).
-(06:39:18) INFO: Found 1 target...
-Target //dev/buildtool/mock:mock_install_src up-to-date:
-  bazel-bin/dev/buildtool/mock/mock_install_src
-(06:39:20) INFO: Elapsed time: 3.750s, Critical Path: 0.01s
-(06:39:20) INFO: 2 processes: 2 internal.
-(06:39:20) INFO: Build completed successfully, 2 total actions
-(06:39:23) INFO: Build completed successfully, 2 total actions
-WARNING: The following rc files are no longer being read, please transfer their contents or import their path into one of the standard rc files:
-/apollo_workspace/tools/bazel.rc
-(06:39:34) INFO: Current date is 2025-09-18
-(06:39:38) INFO: Analyzed target //dev/buildtool/mock:mock_install (178 packages loaded, 39585 targets configured).
-(06:39:38) INFO: Found 1 target...
-(06:40:43) INFO: From Compiling src/google/protobuf/message_lite.cc:
-In file included from /usr/include/string.h:535,
-                 from external/com_google_protobuf/src/google/protobuf/stubs/port.h:39,
-                 from external/com_google_protobuf/src/google/protobuf/stubs/macros.h:34,
-                 from external/com_google_protobuf/src/google/protobuf/stubs/common.h:46,
-                 from external/com_google_protobuf/src/google/protobuf/message_lite.h:45,
-                 from external/com_google_protobuf/src/google/protobuf/message_lite.cc:36:
-In function 'void* memcpy(void*, const void*, size_t)',
-    inlined from 'google::protobuf::uint8* google::protobuf::io::EpsCopyOutputStream::WriteRaw(const void*, int, google::protobuf::uint8*)' at external/com_google_protobuf/src/google/protobuf/io/coded_stream.h:699:16,
-    inlined from 'virtual google::protobuf::uint8* google::protobuf::internal::ImplicitWeakMessage::_InternalSerialize(google::protobuf::uint8*, google::protobuf::io::EpsCopyOutputStream*) const' at external/com_google_protobuf/src/google/protobuf/implicit_weak_message.h:85:28,
-    inlined from 'bool google::protobuf::MessageLite::SerializePartialToZeroCopyStream(google::protobuf::io::ZeroCopyOutputStream*) const' at external/com_google_protobuf/src/google/protobuf/message_lite.cc:419:30:
-/usr/include/x86_64-linux-gnu/bits/string_fortified.h:29:33: warning: 'void* __builtin___memcpy_chk(void*, const void*, long unsigned int, long unsigned int)' specified size between 18446744071562067968 and 18446744073709551615 exceeds maximum object size 9223372036854775807 [-Wstringop-overflow=]
-   29 |   return __builtin___memcpy_chk (__dest, __src, __len,
-      |          ~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~
-   30 |                                  __glibc_objsize0 (__dest));
-      |                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~
-(06:41:34) INFO: From Compiling src/google/protobuf/message_lite.cc:
-In file included from /usr/include/string.h:535,
-                 from external/com_google_protobuf/src/google/protobuf/stubs/port.h:39,
-                 from external/com_google_protobuf/src/google/protobuf/stubs/macros.h:34,
-                 from external/com_google_protobuf/src/google/protobuf/stubs/common.h:46,
-                 from external/com_google_protobuf/src/google/protobuf/message_lite.h:45,
-                 from external/com_google_protobuf/src/google/protobuf/message_lite.cc:36:
-In function 'void* memcpy(void*, const void*, size_t)',
-    inlined from 'google::protobuf::uint8* google::protobuf::io::EpsCopyOutputStream::WriteRaw(const void*, int, google::protobuf::uint8*)' at external/com_google_protobuf/src/google/protobuf/io/coded_stream.h:699:16,
-    inlined from 'virtual google::protobuf::uint8* google::protobuf::internal::ImplicitWeakMessage::_InternalSerialize(google::protobuf::uint8*, google::protobuf::io::EpsCopyOutputStream*) const' at external/com_google_protobuf/src/google/protobuf/implicit_weak_message.h:85:28,
-    inlined from 'bool google::protobuf::MessageLite::SerializePartialToZeroCopyStream(google::protobuf::io::ZeroCopyOutputStream*) const' at external/com_google_protobuf/src/google/protobuf/message_lite.cc:419:30:
-/usr/include/x86_64-linux-gnu/bits/string_fortified.h:29:33: warning: 'void* __builtin___memcpy_chk(void*, const void*, long unsigned int, long unsigned int)' specified size between 18446744071562067968 and 18446744073709551615 exceeds maximum object size 9223372036854775807 [-Wstringop-overflow=]
-   29 |   return __builtin___memcpy_chk (__dest, __src, __len,
-      |          ~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~
-   30 |                                  __glibc_objsize0 (__dest));
-      |                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~
-(06:41:57) INFO: From Compiling src/google/protobuf/message_lite.cc:
-In file included from /usr/include/string.h:535,
-                 from external/com_google_protobuf/src/google/protobuf/stubs/port.h:39,
-                 from external/com_google_protobuf/src/google/protobuf/stubs/macros.h:34,
-                 from external/com_google_protobuf/src/google/protobuf/stubs/common.h:46,
-                 from external/com_google_protobuf/src/google/protobuf/message_lite.h:45,
-                 from external/com_google_protobuf/src/google/protobuf/message_lite.cc:36:
-In function 'void* memcpy(void*, const void*, size_t)',
-    inlined from 'google::protobuf::uint8* google::protobuf::io::EpsCopyOutputStream::WriteRaw(const void*, int, google::protobuf::uint8*)' at external/com_google_protobuf/src/google/protobuf/io/coded_stream.h:699:16,
-    inlined from 'virtual google::protobuf::uint8* google::protobuf::internal::ImplicitWeakMessage::_InternalSerialize(google::protobuf::uint8*, google::protobuf::io::EpsCopyOutputStream*) const' at external/com_google_protobuf/src/google/protobuf/implicit_weak_message.h:85:28,
-    inlined from 'bool google::protobuf::MessageLite::SerializePartialToZeroCopyStream(google::protobuf::io::ZeroCopyOutputStream*) const' at external/com_google_protobuf/src/google/protobuf/message_lite.cc:419:30:
-/usr/include/x86_64-linux-gnu/bits/string_fortified.h:29:33: warning: 'void* __builtin___memcpy_chk(void*, const void*, long unsigned int, long unsigned int)' specified size between 18446744071562067968 and 18446744073709551615 exceeds maximum object size 9223372036854775807 [-Wstringop-overflow=]
-   29 |   return __builtin___memcpy_chk (__dest, __src, __len,
-      |          ~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~
-   30 |                                  __glibc_objsize0 (__dest));
-      |                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~
-(06:43:25) INFO: From Compiling src/google/protobuf/message_lite.cc [for host]:
-In file included from /usr/include/string.h:535,
-                 from external/com_google_protobuf/src/google/protobuf/stubs/port.h:39,
-                 from external/com_google_protobuf/src/google/protobuf/stubs/macros.h:34,
-                 from external/com_google_protobuf/src/google/protobuf/stubs/common.h:46,
-                 from external/com_google_protobuf/src/google/protobuf/message_lite.h:45,
-                 from external/com_google_protobuf/src/google/protobuf/message_lite.cc:36:
-In function 'void* memcpy(void*, const void*, size_t)',
-    inlined from 'google::protobuf::uint8* google::protobuf::io::EpsCopyOutputStream::WriteRaw(const void*, int, google::protobuf::uint8*)' at external/com_google_protobuf/src/google/protobuf/io/coded_stream.h:699:16,
-    inlined from 'virtual google::protobuf::uint8* google::protobuf::internal::ImplicitWeakMessage::_InternalSerialize(google::protobuf::uint8*, google::protobuf::io::EpsCopyOutputStream*) const' at external/com_google_protobuf/src/google/protobuf/implicit_weak_message.h:85:28,
-    inlined from 'bool google::protobuf::MessageLite::SerializePartialToZeroCopyStream(google::protobuf::io::ZeroCopyOutputStream*) const' at external/com_google_protobuf/src/google/protobuf/message_lite.cc:419:30:
-/usr/include/x86_64-linux-gnu/bits/string_fortified.h:29:33: warning: 'void* __builtin___memcpy_chk(void*, const void*, long unsigned int, long unsigned int)' specified size between 18446744071562067968 and 18446744073709551615 exceeds maximum object size 9223372036854775807 [-Wstringop-overflow=]
-   29 |   return __builtin___memcpy_chk (__dest, __src, __len,
-      |          ~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~
-   30 |                                  __glibc_objsize0 (__dest));
-      |                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~
-(06:43:44) [34,733 / 35,524] 4 actions running
-    Compiling src/google/protobuf/descriptor.cc [for host]; 17s local
-    Compiling src/google/protobuf/reflection_ops.cc [for host]; 1s local
-    Compiling src/google/protobuf/extension_set.cc [for host]; 0s local
+ external/libqhull-dev -isystem bazel-out/k8-opt/bin/external/libqhull-dev -isystem external/sqlite3 -isystem bazel-out/k8-opt/bin/external/sqlite3 -isystem external/libtiff5 -isystem bazel-out/k8-opt/bin/external/libtiff5 -isystem external/tinyxml2 -isystem bazel-out/k8-opt/bin/external/tinyxml2 -isystem external/libunwind-dev -isystem bazel-out/k8-opt/bin/external/libunwind-dev -isystem external/libusb-1.0-0 -isystem bazel-out/k8-opt/bin/external/libusb-1.0-0 -isystem external/libwebp-dev -isystem bazel-out/k8-opt/bin/external/libwebp-dev -isystem external/libxml2-dev -isystem bazel-out/k8-opt/bin/external/libxml2-dev -isystem external/libxt-dev -isystem bazel-out/k8-opt/bin/external/libxt-dev -isystem external/nethogs -isystem bazel-out/k8-opt/bin/external/nethogs -isystem external/sysstat -isystem bazel-out/k8-opt/bin/external/sysstat -isystem external/uuid -isystem bazel-out/k8-opt/bin/external/uuid -isystem external/apollo_src -isystem bazel-out/k8-opt/bin/external/apollo_src '-Werror=return-type' '-Werror=unused-but-set-variable' '-Werror=switch' -mavx2 '-fdiagnostics-color=always' '-Werror=reorder' '-std=c++1z' '-DMODULE_NAME="planning"' -fno-canonical-system-headers -Wno-builtin-macro-redefined '-D__DATE__="redacted"' '-D__TIMESTAMP__="redacted"' '-D__TIME__="redacted"' -c modules/planning/traffic_rules/traffic_light/traffic_light.cc -o bazel-out/k8-opt/bin/modules/planning/traffic_rules/traffic_light/_objs/traffic_light_lib/traffic_light.pic.o)
+# Configuration: ceec5eaff94860a32766bc4355bec882f474a381feb3112a530b07cf5cf960c6
+# Execution platform: @local_config_platform//:host
+In file included from bazel-out/k8-opt/bin/external/boost/_virtual_includes/boost/boost/thread/pthread/condition_variable.hpp:15,
+                 from bazel-out/k8-opt/bin/external/boost/_virtual_includes/boost/boost/thread/condition_variable.hpp:16,
+                 from bazel-out/k8-opt/bin/external/boost/_virtual_includes/boost/boost/thread/pthread/shared_mutex.hpp:15,
+                 from bazel-out/k8-opt/bin/external/boost/_virtual_includes/boost/boost/thread/shared_mutex.hpp:28,
+                 from ./modules/planning/planning_base/common/indexed_list.h:26,
+                 from ./modules/planning/planning_base/common/obstacle.h:37,
+                 from ./modules/planning/planning_base/common/ego_info.h:30,
+                 from ./modules/planning/planning_base/common/dependency_injector.h:20,
+                 from ./modules/planning/planning_interface_base/traffic_rules_base/traffic_rule.h:29,
+                 from ./modules/planning/traffic_rules/traffic_light/traffic_light.h:28,
+                 from modules/planning/traffic_rules/traffic_light/traffic_light.cc:21:
+bazel-out/k8-opt/bin/external/boost/_virtual_includes/boost/boost/thread/pthread/thread_data.hpp: In member function 'void boost::thread_attributes::set_stack_size(std::size_t)':
+bazel-out/k8-opt/bin/external/boost/_virtual_includes/boost/boost/thread/pthread/thread_data.hpp:61:19: warning: comparison of integer expressions of different signedness: 'std::size_t' {aka 'long unsigned int'} and 'long int' [-Wsign-compare]
+   61 |           if (size<PTHREAD_STACK_MIN) size=PTHREAD_STACK_MIN;
+      |                   ^
+In file included from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/transport/transport.h:29,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/node/reader_base.h:29,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/node/reader.h:35,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/blocker/intra_reader.h:26,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/node/node_channel_impl.h:25,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/node/node.h:25,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/component/component_base.h:32,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/component/component.h:29,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/cyber.h:25,
+                 from ./modules/planning/planning_base/reference_line/reference_line_provider.h:37,
+                 from ./modules/planning/planning_base/common/ego_info.h:33,
+                 from ./modules/planning/planning_base/common/dependency_injector.h:20,
+                 from ./modules/planning/planning_interface_base/traffic_rules_base/traffic_rule.h:29,
+                 from ./modules/planning/traffic_rules/traffic_light/traffic_light.h:28,
+                 from modules/planning/traffic_rules/traffic_light/traffic_light.cc:21:
+bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/transport/dispatcher/shm_dispatcher.h: In lambda function:
+bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/transport/dispatcher/shm_dispatcher.h:196:25: warning: comparison of integer expressions of different signedness: 'int' and 'std::vector<long unsigned int>::size_type' {aka 'long unsigned int'} [-Wsign-compare]
+  196 |       for (int i = 0; i < related_blocks_for_lock.size(); ++i) {
+      |                       ~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/transport/dispatcher/shm_dispatcher.h: In lambda function:
+bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/transport/dispatcher/shm_dispatcher.h:310:25: warning: comparison of integer expressions of different signedness: 'int' and 'std::vector<long unsigned int>::size_type' {aka 'long unsigned int'} [-Wsign-compare]
+  310 |       for (int i = 0; i < related_blocks_for_lock.size(); ++i) {
+      |                       ~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+modules/planning/traffic_rules/traffic_light/traffic_light.cc: In member function 'void apollo::planning::TrafficLight::MakeDecisions(apollo::planning::Frame*, apollo::planning::ReferenceLineInfo*)':
+modules/planning/traffic_rules/traffic_light/traffic_light.cc:181:18: warning: unused variable 'stop_s' [-Wunused-variable]
+  181 |     const double stop_s = stop_line_s - stop_distance;
+      |                  ^~~~~~
+modules/planning/traffic_rules/traffic_light/traffic_light.cc: At global scope:
+modules/planning/traffic_rules/traffic_light/traffic_light.cc:201:1: error: expected declaration before '}' token
+  201 | }
+      | ^
+modules/planning/traffic_rules/traffic_light/traffic_light.cc:203:1: error: expected declaration before '}' token
+  203 | }  // namespace planning
+      | ^
+modules/planning/traffic_rules/traffic_light/traffic_light.cc:204:1: error: expected declaration before '}' token
+  204 | }  // namespace apollo
+      | ^
+Target //dev/buildtool/mock:mock_install failed to build
+(10:15:03) INFO: Elapsed time: 143.451s, Critical Path: 49.80s
+(10:15:03) INFO: 259 processes: 12 internal, 247 local.
+(10:15:03) FAILED: Build did NOT complete successfully
+(10:15:03) FAILED: Build did NOT complete successfully
+[buildtool] 2025-09-18 18:15:03 ERROR Encounter ErrCode.BazelErr
+[buildtool] 2025-09-18 18:15:03 ERROR hint: Compiling and install failed!
+[buildtool] 2025-09-18 18:15:03 ERROR solution: Please checkout the build file by following bazel error hints
