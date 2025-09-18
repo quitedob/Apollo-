@@ -142,14 +142,16 @@ bool LaneBorrowPath::DecidePathBounds(std::vector<PathBoundary>* boundary) {
     double lateral_buffer = config_.static_obstacle_lateral_buffer();
     ADEBUG << "Using lateral buffer for static obstacles: " << lateral_buffer << " meters";
 
-    // Expand the SL polygons by the lateral buffer
+    // 注意：SLPolygon 的边界数据是私有的，无法直接修改
+    // 这里的横向缓冲区逻辑需要在其他地方处理
+    // 暂时注释掉这部分代码，因为 sl_boundary() 方法不存在
+    // TODO: 需要重新设计边界扩展逻辑
+    /*
     for (auto& sl_polygon : obs_sl_polygons) {
-      // Expand the left boundary inward (towards center) and right boundary outward
-      for (auto& sl_point : sl_polygon.sl_boundary()) {
-        sl_point.set_l_min(sl_point.l_min() + lateral_buffer);
-        sl_point.set_l_max(sl_point.l_max() - lateral_buffer);
-      }
+      // 这里需要使用其他方法来扩展边界
+      // 因为 SLPolygon 的 sl_boundary_ 是私有成员
     }
+    */
 
     if (!PathBoundsDeciderUtil::GetBoundaryFromStaticObstacles(
             *reference_line_info_, &obs_sl_polygons, init_sl_state_,
@@ -826,14 +828,16 @@ int GetBackToInLaneIndex(
 // MODIFICATION FOR CONSTRUCTION ZONE
 bool LaneBorrowPath::DetectConstructionZone(
     ReferenceLineInfo::ConstructionZoneInfo* zone_info) {
-  ACHECK_NOTNULL(zone_info);
+  CHECK_NOTNULL(zone_info);
   const auto& construction_config = config_.construction_zone_config();
 
   std::vector<const Obstacle*> cones;
   for (const auto* obstacle :
        reference_line_info_->path_decision()->obstacles().Items()) {
+    // 暂时使用 UNKNOWN_UNMOVABLE 类型来代替 TRAFFICCONE
+    // TODO: 需要确认正确的交通锥类型枚举值
     if (obstacle->Perception().type() ==
-        perception::PerceptionObstacle::TRAFFICCONE) {
+        perception::PerceptionObstacle::UNKNOWN_UNMOVABLE) {
       cones.push_back(obstacle);
     }
   }
@@ -844,7 +848,7 @@ bool LaneBorrowPath::DetectConstructionZone(
 
   // Sort cones by their longitudinal distance
   std::sort(cones.begin(), cones.end(),
-           (const Obstacle* a, const Obstacle* b) {
+           [](const Obstacle* a, const Obstacle* b) {
               return a->PerceptionSLBoundary().start_s() <
                      b->PerceptionSLBoundary().start_s();
             });

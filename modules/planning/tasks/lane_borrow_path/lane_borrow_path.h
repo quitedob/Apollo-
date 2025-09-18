@@ -116,6 +116,10 @@ class LaneBorrowPath : public PathGeneration {
    * @param lane_borrow_info is borrow side.
    */
   void SetPathInfo(PathData* const path_data);
+  
+  // 检测施工区域的函数声明
+  bool DetectConstructionZone(ReferenceLineInfo::ConstructionZoneInfo* zone_info);
+  
   LaneBorrowPathConfig config_;
   std::vector<SidePassDirection> decided_side_pass_direction_;
   int use_self_lane_;

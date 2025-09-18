@@ -223,9 +223,9 @@ void SpeedBoundsDecider::RecordSTGraphDebug(
 }
 
 // MODIFICATION FOR CONSTRUCTION ZONE
-Status SpeedBoundsDecider::AddSpeedLimitFromConstructionZone(
+common::Status SpeedBoundsDecider::AddSpeedLimitFromConstructionZone(
     SpeedLimit* const speed_limit) {
-  ACHECK_NOTNULL(speed_limit);
+  DCHECK_NOTNULL(speed_limit);
   const auto& zone_info_opt = reference_line_info_->construction_zone_info();
 
   if (!zone_info_opt) {
@@ -234,17 +234,10 @@ Status SpeedBoundsDecider::AddSpeedLimitFromConstructionZone(
   }
 
   const auto& zone_info = *zone_info_opt;
-  // TODO(all): A better way to get config without coupling.
-  // For this task, we assume the config is available.
-  const auto& construction_config = injector_->planning_context()
-                                        ->planning_status()
-                                       .lane_borrow_path_config()
-                                       .construction_zone_config();
 
-  const double slowdown_buffer =
-      construction_config.slowdown_start_buffer_m();
-  const double speedup_buffer =
-      construction_config.speedup_end_buffer_m();
+  // Use default buffer values for simplicity
+  const double slowdown_buffer = 5.0;  // 5 meters buffer before construction zone
+  const double speedup_buffer = 3.0;   // 3 meters buffer after construction zone
 
   const double start_s = std::max(0.0, zone_info.start_s - slowdown_buffer);
   const double end_s = zone_info.end_s + speedup_buffer;

@@ -1,0 +1,502 @@
+(06:08:34) INFO: From Compiling src/google/protobuf/message_lite.cc:
+In file included from /usr/include/string.h:535,
+                 from external/com_google_protobuf/src/google/protobuf/stubs/port.h:39,
+                 from external/com_google_protobuf/src/google/protobuf/stubs/macros.h:34,
+                 from external/com_google_protobuf/src/google/protobuf/stubs/common.h:46,
+                 from external/com_google_protobuf/src/google/protobuf/message_lite.h:45,
+                 from external/com_google_protobuf/src/google/protobuf/message_lite.cc:36:
+In function 'void* memcpy(void*, const void*, size_t)',
+    inlined from 'google::protobuf::uint8* google::protobuf::io::EpsCopyOutputStream::WriteRaw(const void*, int, google::protobuf::uint8*)' at external/com_google_protobuf/src/google/protobuf/io/coded_stream.h:699:16,
+    inlined from 'virtual google::protobuf::uint8* google::protobuf::internal::ImplicitWeakMessage::_InternalSerialize(google::protobuf::uint8*, google::protobuf::io::EpsCopyOutputStream*) const' at external/com_google_protobuf/src/google/protobuf/implicit_weak_message.h:85:28,
+    inlined from 'bool google::protobuf::MessageLite::SerializePartialToZeroCopyStream(google::protobuf::io::ZeroCopyOutputStream*) const' at external/com_google_protobuf/src/google/protobuf/message_lite.cc:419:30:
+/usr/include/x86_64-linux-gnu/bits/string_fortified.h:29:33: warning: 'void* __builtin___memcpy_chk(void*, const void*, long unsigned int, long unsigned int)' specified size between 18446744071562067968 and 18446744073709551615 exceeds maximum object size 9223372036854775807 [-Wstringop-overflow=]
+   29 |   return __builtin___memcpy_chk (__dest, __src, __len,
+      |          ~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~
+   30 |                                  __glibc_objsize0 (__dest));
+      |                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~
+(06:08:49) [14,81
+(06:08:58) [14,839 / 15,424] 4 actions, 3 running
+(06:09:22) INFO: From Compiling src/google/protobuf/message_lite.cc:
+In file included from /usr/include/string.h:535,
+                 from external/com_google_protobuf/src/google/protobuf/stubs/port.h:39,
+                 from external/com_google_protobuf/src/google/protobuf/stubs/macros.h:34,
+                 from external/com_google_protobuf/src/google/protobuf/stubs/common.h:46,
+                 from external/com_google_protobuf/src/google/protobuf/message_lite.h:45,
+                 from external/com_google_protobuf/src/google/protobuf/message_lite.cc:36:
+In function 'void* memcpy(void*, const void*, size_t)',
+    inlined from 'google::protobuf::uint8* google::protobuf::io::EpsCopyOutputStream::WriteRaw(const void*, int, google::protobuf::uint8*)' at external/com_google_protobuf/src/google/protobuf/io/coded_stream.h:699:16,
+    inlined from 'virtual google::protobuf::uint8* google::protobuf::internal::ImplicitWeakMessage::_InternalSerialize(google::protobuf::uint8*, google::protobuf::io::EpsCopyOutputStream*) const' at external/com_google_protobuf/src/google/protobuf/implicit_weak_message.h:85:28,
+    inlined from 'bool google::protobuf::MessageLite::SerializePartialToZeroCopyStream(google::protobuf::io::ZeroCopyOutputStream*) const' at external/com_google_protobuf/src/google/protobuf/message_lite.cc:419:30:
+/usr/include/x86_64-linux-gnu/bits/string_fortified.h:29:33: warning: 'void* __builtin___memcpy_chk(void*, const void*, long unsigned int, long unsigned int)' specified size between 18446744071562067968 and 18446744073709551615 exceeds maximum object size 9223372036854775807 [-Wstringop-overflow=]
+   29 |   return __builtin___memcpy_chk (__dest, __src, __len,
+      |          ~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~
+   30 |                                  __glibc_objsize0 (__dest));
+      |                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~
+(06:09:37) [14,902 / 15,424] 4 actions, 3 running
+    @com_google_protobuf//:protoc_lib; 1s local
+    @com_google_protobuf//:protoc_lib; 1s local
+    @com_google_protobuf//:protoc_lib; 0s local
+    [Scann] @com_google_protobuf//:protoc_lib
+^C
+Bazel caught interrupt signal; shutting down.
+
+[buildtool] 2025-09-18 14:09:37 ERROR Keyboard interrupt received. Stop all processes.
+Killed
+root@in-dev-docker:/apollo_workspace# buildtool build -p modules/planning
+/usr/bin/buildtool:36: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html
+  from pkg_resources import parse_version
+[buildtool] 2025-09-18 14:09:43 INFO Download the latest package index to construct a local database...
+[buildtool] 2025-09-18 14:09:46 INFO update repo apollo-tools
+[buildtool] 2025-09-18 14:09:46 INFO update repo apollo-core-jammy
+[buildtool] 2025-09-18 14:09:46 INFO update repo apollo-core
+[buildtool] 2025-09-18 14:09:47 WARNING Gpu is not available, using cpu instead
+[buildtool] 2025-09-18 14:09:47 INFO Reconfigure apollo enviroment setup
+[buildtool] 2025-09-18 14:09:48 INFO Analyzing dependencies topological graph...
+Found possible Python library paths:
+  /opt/apollo/neo/python
+  /usr/lib/python3/dist-packages
+  /usr/local/lib/python3.10/dist-packages
+Found CUDA 11.8 in:
+    /usr/local/cuda-11.8/targets/x86_64-linux/lib
+    /usr/local/cuda-11.8/targets/x86_64-linux/include
+Found cuDNN 8 in:
+    /usr/lib/x86_64-linux-gnu
+    /usr/include
+Found TensorRT 8 in:
+    /usr/lib/x86_64-linux-gnu
+    /usr/include/x86_64-linux-gnu
+      |                    ^~~~~~~~~~~~~~~~~~
+(06:13:11) INFO: From Compiling modules/planning/planners/rtk/rtk_replay_planner.cc:
+In file included from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/transport/transport.h:29,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/node/reader_base.h:29,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/node/reader.h:35,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/blocker/intra_reader.h:26,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/node/node_channel_impl.h:25,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/node/node.h:25,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/component/component_base.h:32,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/component/component.h:29,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/cyber.h:25,
+                 from bazel-out/k8-opt/bin/external/common/_virtual_includes/common/modules/common/monitor_log/monitor_logger.h:29,
+                 from bazel-out/k8-opt/bin/external/common/_virtual_includes/common/modules/common/monitor_log/monitor_log_buffer.h:31,
+                 from ./modules/planning/planning_base/common/frame.h:42,
+                 from ./modules/planning/planners/rtk/rtk_replay_planner.h:26,
+                 from modules/planning/planners/rtk/rtk_replay_planner.cc:17:
+bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/transport/dispatcher/shm_dispatcher.h: In lambda function:
+bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/transport/dispatcher/shm_dispatcher.h:196:25: warning: comparison of integer expressions of different signedness: 'int' and 'std::vector<long unsigned int>::size_type' {aka 'long unsigned int'} [-Wsign-compare]
+  196 |       for (int i = 0; i < related_blocks_for_lock.size(); ++i) {
+      |                       ~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/transport/dispatcher/shm_dispatcher.h: In lambda function:
+bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/transport/dispatcher/shm_dispatcher.h:310:25: warning: comparison of integer expressions of different signedness: 'int' and 'std::vector<long unsigned int>::size_type' {aka 'long unsigned int'} [-Wsign-compare]
+  310 |       for (int i = 0; i < related_blocks_for_lock.size(); ++i) {
+      |                       ~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from bazel-out/k8-opt/bin/external/boost/_virtual_includes/boost/boost/thread/pthread/condition_variable.hpp:15,
+                 from bazel-out/k8-opt/bin/external/boost/_virtual_includes/boost/boost/thread/condition_variable.hpp:16,
+                 from bazel-out/k8-opt/bin/external/boost/_virtual_includes/boost/boost/thread/pthread/shared_mutex.hpp:15,
+                 from bazel-out/k8-opt/bin/external/boost/_virtual_includes/boost/boost/thread/shared_mutex.hpp:28,
+                 from ./modules/planning/planning_base/common/indexed_list.h:26,
+                 from ./modules/planning/planning_base/common/obstacle.h:37,
+                 from ./modules/planning/planning_base/common/ego_info.h:30,
+                 from ./modules/planning/planning_base/common/frame.h:44,
+                 from ./modules/planning/planners/rtk/rtk_replay_planner.h:26,
+                 from modules/planning/planners/rtk/rtk_replay_planner.cc:17:
+bazel-out/k8-opt/bin/external/boost/_virtual_includes/boost/boost/thread/pthread/thread_data.hpp: In member function 'void boost::thread_attributes::set_stack_size(std::size_t)':
+bazel-out/k8-opt/bin/external/boost/_virtual_includes/boost/boost/thread/pthread/thread_data.hpp:61:19: warning: comparison of integer expressions of different signedness: 'std::size_t' {aka 'long unsigned int'} and 'long int' [-Wsign-compare]
+   61 |           if (size<PTHREAD_STACK_MIN) size=PTHREAD_STACK_MIN;
+      |                   ^
+(06:13:20) INFO: From Compiling modules/planning/planners/navi/navi_planner.cc:
+In file included from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/transport/transport.h:29,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/node/reader_base.h:29,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/node/reader.h:35,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/blocker/intra_reader.h:26,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/node/node_channel_impl.h:25,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/node/node.h:25,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/component/component_base.h:32,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/component/component.h:29,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/cyber.h:25,
+                 from bazel-out/k8-opt/bin/external/common/_virtual_includes/common/modules/common/monitor_log/monitor_logger.h:29,
+                 from bazel-out/k8-opt/bin/external/common/_virtual_includes/common/modules/common/monitor_log/monitor_log_buffer.h:31,
+                 from ./modules/planning/planning_base/common/frame.h:42,
+                 from ./modules/planning/planners/navi/decider/navi_task.h:28,
+                 from ./modules/planning/planners/navi/navi_planner.h:36,
+                 from modules/planning/planners/navi/navi_planner.cc:22:
+bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/transport/dispatcher/shm_dispatcher.h: In lambda function:
+bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/transport/dispatcher/shm_dispatcher.h:196:25: warning: comparison of integer expressions of different signedness: 'int' and 'std::vector<long unsigned int>::size_type' {aka 'long unsigned int'} [-Wsign-compare]
+  196 |       for (int i = 0; i < related_blocks_for_lock.size(); ++i) {
+      |                       ~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/transport/dispatcher/shm_dispatcher.h: In lambda function:
+bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/transport/dispatcher/shm_dispatcher.h:310:25: warning: comparison of integer expressions of different signedness: 'int' and 'std::vector<long unsigned int>::size_type' {aka 'long unsigned int'} [-Wsign-compare]
+  310 |       for (int i = 0; i < related_blocks_for_lock.size(); ++i) {
+      |                       ~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from bazel-out/k8-opt/bin/external/boost/_virtual_includes/boost/boost/thread/pthread/condition_variable.hpp:15,
+                 from bazel-out/k8-opt/bin/external/boost/_virtual_includes/boost/boost/thread/condition_variable.hpp:16,
+                 from bazel-out/k8-opt/bin/external/boost/_virtual_includes/boost/boost/thread/pthread/shared_mutex.hpp:15,
+                 from bazel-out/k8-opt/bin/external/boost/_virtual_includes/boost/boost/thread/shared_mutex.hpp:28,
+                 from ./modules/planning/planning_base/common/indexed_list.h:26,
+                 from ./modules/planning/planning_base/common/obstacle.h:37,
+                 from ./modules/planning/planning_base/common/ego_info.h:30,
+                 from ./modules/planning/planning_base/common/frame.h:44,
+                 from ./modules/planning/planners/navi/decider/navi_task.h:28,
+                 from ./modules/planning/planners/navi/navi_planner.h:36,
+                 from modules/planning/planners/navi/navi_planner.cc:22:
+bazel-out/k8-opt/bin/external/boost/_virtual_includes/boost/boost/thread/pthread/thread_data.hpp: In member function 'void boost::thread_attributes::set_stack_size(std::size_t)':
+bazel-out/k8-opt/bin/external/boost/_virtual_includes/boost/boost/thread/pthread/thread_data.hpp:61:19: warning: comparison of integer expressions of different signedness: 'std::size_t' {aka 'long unsigned int'} and 'long int' [-Wsign-compare]
+   61 |           if (size<PTHREAD_STACK_MIN) size=PTHREAD_STACK_MIN;
+      |                   ^
+(06:13:27) INFO: From Compiling modules/planning/tasks/open_space_pre_stop_decider/open_space_pre_stop_decider.cc:
+In file included from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/transport/transport.h:29,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/node/reader_base.h:29,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/node/reader.h:35,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/blocker/intra_reader.h:26,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/node/node_channel_impl.h:25,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/node/node.h:25,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/component/component_base.h:32,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/component/component.h:29,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/cyber.h:25,
+                 from bazel-out/k8-opt/bin/external/common/_virtual_includes/common/modules/common/monitor_log/monitor_logger.h:29,
+                 from bazel-out/k8-opt/bin/external/common/_virtual_includes/common/modules/common/monitor_log/monitor_log_buffer.h:31,
+                 from ./modules/planning/planning_base/common/frame.h:42,
+                 from ./modules/planning/tasks/open_space_pre_stop_decider/open_space_pre_stop_decider.h:30,
+                 from modules/planning/tasks/open_space_pre_stop_decider/open_space_pre_stop_decider.cc:21:
+bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/transport/dispatcher/shm_dispatcher.h: In lambda function:
+bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/transport/dispatcher/shm_dispatcher.h:196:25: warning: comparison of integer expressions of different signedness: 'int' and 'std::vector<long unsigned int>::size_type' {aka 'long unsigned int'} [-Wsign-compare]
+  196 |       for (int i = 0; i < related_blocks_for_lock.size(); ++i) {
+      |                       ~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/transport/dispatcher/shm_dispatcher.h: In lambda function:
+bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/transport/dispatcher/shm_dispatcher.h:310:25: warning: comparison of integer expressions of different signedness: 'int' and 'std::vector<long unsigned int>::size_type' {aka 'long unsigned int'} [-Wsign-compare]
+  310 |       for (int i = 0; i < related_blocks_for_lock.size(); ++i) {
+      |                       ~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from bazel-out/k8-opt/bin/external/boost/_virtual_includes/boost/boost/thread/pthread/condition_variable.hpp:15,
+                 from bazel-out/k8-opt/bin/external/boost/_virtual_includes/boost/boost/thread/condition_variable.hpp:16,
+                 from bazel-out/k8-opt/bin/external/boost/_virtual_includes/boost/boost/thread/pthread/shared_mutex.hpp:15,
+                 from bazel-out/k8-opt/bin/external/boost/_virtual_includes/boost/boost/thread/shared_mutex.hpp:28,
+                 from ./modules/planning/planning_base/common/indexed_list.h:26,
+                 from ./modules/planning/planning_base/common/obstacle.h:37,
+                 from ./modules/planning/planning_base/common/ego_info.h:30,
+                 from ./modules/planning/planning_base/common/frame.h:44,
+                 from ./modules/planning/tasks/open_space_pre_stop_decider/open_space_pre_stop_decider.h:30,
+                 from modules/planning/tasks/open_space_pre_stop_decider/open_space_pre_stop_decider.cc:21:
+bazel-out/k8-opt/bin/external/boost/_virtual_includes/boost/boost/thread/pthread/thread_data.hpp: In member function 'void boost::thread_attributes::set_stack_size(std::size_t)':
+bazel-out/k8-opt/bin/external/boost/_virtual_includes/boost/boost/thread/pthread/thread_data.hpp:61:19: warning: comparison of integer expressions of different signedness: 'std::size_t' {aka 'long unsigned int'} and 'long int' [-Wsign-compare]
+   61 |           if (size<PTHREAD_STACK_MIN) size=PTHREAD_STACK_MIN;
+      |                   ^
+modules/planning/tasks/open_space_pre_stop_decider/open_space_pre_stop_decider.cc: In member function 'void apollo::planning::OpenSpacePreStopDecider::SetParkingSpotStopFence(double, apollo::planning::Frame*, apollo::planning::ReferenceLineInfo*)':
+modules/planning/tasks/open_space_pre_stop_decider/open_space_pre_stop_decider.cc:151:15: warning: unused variable 'nearby_path' [-Wunused-variable]
+  151 |   const auto& nearby_path = reference_line_info->reference_line().map_path();
+      |               ^~~~~~~~~~~
+modules/planning/tasks/open_space_pre_stop_decider/open_space_pre_stop_decider.cc:157:10: warning: unused variable 'ego_s' [-Wunused-variable]
+  157 |   double ego_s = adc_front_edge_s - front_edge_to_center;
+      |          ^~~~~
+modules/planning/tasks/open_space_pre_stop_decider/open_space_pre_stop_decider.cc:158:23: warning: unused variable 'vehicle_state' [-Wunused-variable]
+  158 |   const VehicleState& vehicle_state = frame->vehicle_state();
+      |                       ^~~~~~~~~~~~~
+modules/planning/tasks/open_space_pre_stop_decider/open_space_pre_stop_decider.cc:161:10: warning: unused variable 'static_linear_velocity_epsilon' [-Wunused-variable]
+  161 |   double static_linear_velocity_epsilon = 1.0e-2;
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+modules/planning/tasks/open_space_pre_stop_decider/open_space_pre_stop_decider.cc:162:27: warning: unused variable 'kStopBuffer' [-Wunused-variable]
+  162 |   static constexpr double kStopBuffer = 0.2;
+      |                           ^~~~~~~~~~~
+(06:13:28) INFO: From Compiling modules/planning/scenarios/stop_sign_unprotected/stage_pre_stop.cc:
+In file included from bazel-out/k8-opt/bin/external/boost/_virtual_includes/boost/boost/thread/pthread/condition_variable.hpp:15,
+                 from bazel-out/k8-opt/bin/external/boost/_virtual_includes/boost/boost/thread/condition_variable.hpp:16,
+                 from bazel-out/k8-opt/bin/external/boost/_virtual_includes/boost/boost/thread/pthread/shared_mutex.hpp:15,
+                 from bazel-out/k8-opt/bin/external/boost/_virtual_includes/boost/boost/thread/shared_mutex.hpp:28,
+                 from ./modules/planning/planning_base/common/indexed_list.h:26,
+                 from ./modules/planning/planning_base/common/obstacle.h:37,
+                 from ./modules/planning/planning_base/common/ego_info.h:30,
+                 from ./modules/planning/planning_base/common/dependency_injector.h:20,
+                 from ./modules/planning/planning_interface_base/scenario_base/stage.h:30,
+                 from ./modules/planning/scenarios/stop_sign_unprotected/stage_pre_stop.h:28,
+                 from modules/planning/scenarios/stop_sign_unprotected/stage_pre_stop.cc:21:
+bazel-out/k8-opt/bin/external/boost/_virtual_includes/boost/boost/thread/pthread/thread_data.hpp: In member function 'void boost::thread_attributes::set_stack_size(std::size_t)':
+bazel-out/k8-opt/bin/external/boost/_virtual_includes/boost/boost/thread/pthread/thread_data.hpp:61:19: warning: comparison of integer expressions of different signedness: 'std::size_t' {aka 'long unsigned int'} and 'long int' [-Wsign-compare]
+   61 |           if (size<PTHREAD_STACK_MIN) size=PTHREAD_STACK_MIN;
+      |                   ^
+In file included from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/transport/transport.h:29,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/node/reader_base.h:29,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/node/reader.h:35,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/blocker/intra_reader.h:26,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/node/node_channel_impl.h:25,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/node/node.h:25,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/component/component_base.h:32,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/component/component.h:29,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/cyber.h:25,
+                 from ./modules/planning/planning_base/reference_line/reference_line_provider.h:37,
+                 from ./modules/planning/planning_base/common/ego_info.h:33,
+                 from ./modules/planning/planning_base/common/dependency_injector.h:20,
+                 from ./modules/planning/planning_interface_base/scenario_base/stage.h:30,
+                 from ./modules/planning/scenarios/stop_sign_unprotected/stage_pre_stop.h:28,
+                 from modules/planning/scenarios/stop_sign_unprotected/stage_pre_stop.cc:21:
+bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/transport/dispatcher/shm_dispatcher.h: In lambda function:
+bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/transport/dispatcher/shm_dispatcher.h:196:25: warning: comparison of integer expressions of different signedness: 'int' and 'std::vector<long unsigned int>::size_type' {aka 'long unsigned int'} [-Wsign-compare]
+  196 |       for (int i = 0; i < related_blocks_for_lock.size(); ++i) {
+      |                       ~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/transport/dispatcher/shm_dispatcher.h: In lambda function:
+bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/transport/dispatcher/shm_dispatcher.h:310:25: warning: comparison of integer expressions of different signedness: 'int' and 'std::vector<long unsigned int>::size_type' {aka 'long unsigned int'} [-Wsign-compare]
+  310 |       for (int i = 0; i < related_blocks_for_lock.size(); ++i) {
+      |                       ~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+(06:13:30) INFO: From Compiling modules/planning/scenarios/stop_sign_unprotected/stage_creep.cc:
+In file included from bazel-out/k8-opt/bin/external/boost/_virtual_includes/boost/boost/thread/pthread/condition_variable.hpp:15,
+                 from bazel-out/k8-opt/bin/external/boost/_virtual_includes/boost/boost/thread/condition_variable.hpp:16,
+                 from bazel-out/k8-opt/bin/external/boost/_virtual_includes/boost/boost/thread/pthread/shared_mutex.hpp:15,
+                 from bazel-out/k8-opt/bin/external/boost/_virtual_includes/boost/boost/thread/shared_mutex.hpp:28,
+                 from ./modules/planning/planning_base/common/indexed_list.h:26,
+                 from ./modules/planning/planning_base/common/obstacle.h:37,
+                 from ./modules/planning/planning_base/common/ego_info.h:30,
+                 from ./modules/planning/planning_base/common/dependency_injector.h:20,
+                 from ./modules/planning/planning_interface_base/scenario_base/stage.h:30,
+                 from ./modules/planning/planning_interface_base/scenario_base/base_stage_creep.h:26,
+                 from ./modules/planning/scenarios/stop_sign_unprotected/stage_creep.h:27,
+                 from modules/planning/scenarios/stop_sign_unprotected/stage_creep.cc:20:
+bazel-out/k8-opt/bin/external/boost/_virtual_includes/boost/boost/thread/pthread/thread_data.hpp: In member function 'void boost::thread_attributes::set_stack_size(std::size_t)':
+bazel-out/k8-opt/bin/external/boost/_virtual_includes/boost/boost/thread/pthread/thread_data.hpp:61:19: warning: comparison of integer expressions of different signedness: 'std::size_t' {aka 'long unsigned int'} and 'long int' [-Wsign-compare]
+   61 |           if (size<PTHREAD_STACK_MIN) size=PTHREAD_STACK_MIN;
+      |                   ^
+In file included from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/transport/transport.h:29,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/node/reader_base.h:29,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/node/reader.h:35,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/blocker/intra_reader.h:26,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/node/node_channel_impl.h:25,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/node/node.h:25,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/component/component_base.h:32,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/component/component.h:29,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/cyber.h:25,
+                 from ./modules/planning/planning_base/reference_line/reference_line_provider.h:37,
+                 from ./modules/planning/planning_base/common/ego_info.h:33,
+                 from ./modules/planning/planning_base/common/dependency_injector.h:20,
+                 from ./modules/planning/planning_interface_base/scenario_base/stage.h:30,
+                 from ./modules/planning/planning_interface_base/scenario_base/base_stage_creep.h:26,
+                 from ./modules/planning/scenarios/stop_sign_unprotected/stage_creep.h:27,
+                 from modules/planning/scenarios/stop_sign_unprotected/stage_creep.cc:20:
+bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/transport/dispatcher/shm_dispatcher.h: In lambda function:
+bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/transport/dispatcher/shm_dispatcher.h:196:25: warning: comparison of integer expressions of different signedness: 'int' and 'std::vector<long unsigned int>::size_type' {aka 'long unsigned int'} [-Wsign-compare]
+  196 |       for (int i = 0; i < related_blocks_for_lock.size(); ++i) {
+      |                       ~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/transport/dispatcher/shm_dispatcher.h: In lambda function:
+bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/transport/dispatcher/shm_dispatcher.h:310:25: warning: comparison of integer expressions of different signedness: 'int' and 'std::vector<long unsigned int>::size_type' {aka 'long unsigned int'} [-Wsign-compare]
+  310 |       for (int i = 0; i < related_blocks_for_lock.size(); ++i) {
+      |                       ~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+(06:13:37) INFO: From Compiling modules/planning/scenarios/stop_sign_unprotected/stage_intersection_cruise.cc:
+In file included from bazel-out/k8-opt/bin/external/boost/_virtual_includes/boost/boost/thread/pthread/condition_variable.hpp:15,
+                 from bazel-out/k8-opt/bin/external/boost/_virtual_includes/boost/boost/thread/condition_variable.hpp:16,
+                 from bazel-out/k8-opt/bin/external/boost/_virtual_includes/boost/boost/thread/pthread/shared_mutex.hpp:15,
+                 from bazel-out/k8-opt/bin/external/boost/_virtual_includes/boost/boost/thread/shared_mutex.hpp:28,
+                 from ./modules/planning/planning_base/common/indexed_list.h:26,
+                 from ./modules/planning/planning_base/common/obstacle.h:37,
+                 from ./modules/planning/planning_base/common/ego_info.h:30,
+                 from ./modules/planning/planning_base/common/dependency_injector.h:20,
+                 from ./modules/planning/planning_interface_base/scenario_base/stage.h:30,
+                 from ./modules/planning/planning_interface_base/scenario_base/base_stage_cruise.h:23,
+                 from ./modules/planning/scenarios/stop_sign_unprotected/stage_intersection_cruise.h:26,
+                 from modules/planning/scenarios/stop_sign_unprotected/stage_intersection_cruise.cc:21:
+bazel-out/k8-opt/bin/external/boost/_virtual_includes/boost/boost/thread/pthread/thread_data.hpp: In member function 'void boost::thread_attributes::set_stack_size(std::size_t)':
+bazel-out/k8-opt/bin/external/boost/_virtual_includes/boost/boost/thread/pthread/thread_data.hpp:61:19: warning: comparison of integer expressions of different signedness: 'std::size_t' {aka 'long unsigned int'} and 'long int' [-Wsign-compare]
+   61 |           if (size<PTHREAD_STACK_MIN) size=PTHREAD_STACK_MIN;
+      |                   ^
+In file included from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/transport/transport.h:29,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/node/reader_base.h:29,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/node/reader.h:35,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/blocker/intra_reader.h:26,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/node/node_channel_impl.h:25,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/node/node.h:25,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/component/component_base.h:32,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/component/component.h:29,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/cyber.h:25,
+                 from ./modules/planning/planning_base/reference_line/reference_line_provider.h:37,
+                 from ./modules/planning/planning_base/common/ego_info.h:33,
+                 from ./modules/planning/planning_base/common/dependency_injector.h:20,
+                 from ./modules/planning/planning_interface_base/scenario_base/stage.h:30,
+                 from ./modules/planning/planning_interface_base/scenario_base/base_stage_cruise.h:23,
+                 from ./modules/planning/scenarios/stop_sign_unprotected/stage_intersection_cruise.h:26,
+                 from modules/planning/scenarios/stop_sign_unprotected/stage_intersection_cruise.cc:21:
+bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/transport/dispatcher/shm_dispatcher.h: In lambda function:
+bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/transport/dispatcher/shm_dispatcher.h:196:25: warning: comparison of integer expressions of different signedness: 'int' and 'std::vector<long unsigned int>::size_type' {aka 'long unsigned int'} [-Wsign-compare]
+  196 |       for (int i = 0; i < related_blocks_for_lock.size(); ++i) {
+      |                       ~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/transport/dispatcher/shm_dispatcher.h: In lambda function:
+bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/transport/dispatcher/shm_dispatcher.h:310:25: warning: comparison of integer expressions of different signedness: 'int' and 'std::vector<long unsigned int>::size_type' {aka 'long unsigned int'} [-Wsign-compare]
+  310 |       for (int i = 0; i < related_blocks_for_lock.size(); ++i) {
+      |                       ~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+(06:13:44) INFO: From Compiling modules/planning/scenarios/stop_sign_unprotected/stop_sign_unprotected_scenario.cc:
+In file included from bazel-out/k8-opt/bin/external/boost/_virtual_includes/boost/boost/thread/pthread/condition_variable.hpp:15,
+                 from bazel-out/k8-opt/bin/external/boost/_virtual_includes/boost/boost/thread/condition_variable.hpp:16,
+                 from bazel-out/k8-opt/bin/external/boost/_virtual_includes/boost/boost/thread/pthread/shared_mutex.hpp:15,
+                 from bazel-out/k8-opt/bin/external/boost/_virtual_includes/boost/boost/thread/shared_mutex.hpp:28,
+                 from ./modules/planning/planning_base/common/indexed_list.h:26,
+                 from ./modules/planning/planning_base/common/obstacle.h:37,
+                 from ./modules/planning/planning_base/common/ego_info.h:30,
+                 from ./modules/planning/planning_base/common/dependency_injector.h:20,
+                 from ./modules/planning/planning_interface_base/scenario_base/scenario.h:30,
+                 from ./modules/planning/scenarios/stop_sign_unprotected/stop_sign_unprotected_scenario.h:30,
+                 from modules/planning/scenarios/stop_sign_unprotected/stop_sign_unprotected_scenario.cc:21:
+bazel-out/k8-opt/bin/external/boost/_virtual_includes/boost/boost/thread/pthread/thread_data.hpp: In member function 'void boost::thread_attributes::set_stack_size(std::size_t)':
+bazel-out/k8-opt/bin/external/boost/_virtual_includes/boost/boost/thread/pthread/thread_data.hpp:61:19: warning: comparison of integer expressions of different signedness: 'std::size_t' {aka 'long unsigned int'} and 'long int' [-Wsign-compare]
+   61 |           if (size<PTHREAD_STACK_MIN) size=PTHREAD_STACK_MIN;
+      |                   ^
+In file included from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/transport/transport.h:29,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/node/reader_base.h:29,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/node/reader.h:35,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/blocker/intra_reader.h:26,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/node/node_channel_impl.h:25,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/node/node.h:25,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/component/component_base.h:32,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/component/component.h:29,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/cyber.h:25,
+                 from ./modules/planning/planning_base/reference_line/reference_line_provider.h:37,
+                 from ./modules/planning/planning_base/common/ego_info.h:33,
+                 from ./modules/planning/planning_base/common/dependency_injector.h:20,
+                 from ./modules/planning/planning_interface_base/scenario_base/scenario.h:30,
+                 from ./modules/planning/scenarios/stop_sign_unprotected/stop_sign_unprotected_scenario.h:30,
+                 from modules/planning/scenarios/stop_sign_unprotected/stop_sign_unprotected_scenario.cc:21:
+bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/transport/dispatcher/shm_dispatcher.h: In lambda function:
+bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/transport/dispatcher/shm_dispatcher.h:196:25: warning: comparison of integer expressions of different signedness: 'int' and 'std::vector<long unsigned int>::size_type' {aka 'long unsigned int'} [-Wsign-compare]
+  196 |       for (int i = 0; i < related_blocks_for_lock.size(); ++i) {
+      |                       ~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/transport/dispatcher/shm_dispatcher.h: In lambda function:
+bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/transport/dispatcher/shm_dispatcher.h:310:25: warning: comparison of integer expressions of different signedness: 'int' and 'std::vector<long unsigned int>::size_type' {aka 'long unsigned int'} [-Wsign-compare]
+  310 |       for (int i = 0; i < related_blocks_for_lock.size(); ++i) {
+      |                       ~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+modules/planning/scenarios/stop_sign_unprotected/stop_sign_unprotected_scenario.cc: In member function 'int apollo::planning::StopSignUnprotectedScenario::GetAssociatedLanes(const apollo::hdmap::StopSignInfo&)':
+modules/planning/scenarios/stop_sign_unprotected/stop_sign_unprotected_scenario.cc:70:19: warning: loop variable 'stop_sign' creates a copy from type 'const std::shared_ptr<const apollo::hdmap::StopSignInfo>' [-Wrange-loop-construct]
+   70 |   for (const auto stop_sign : associated_stop_signs) {
+      |                   ^~~~~~~~~
+modules/planning/scenarios/stop_sign_unprotected/stop_sign_unprotected_scenario.cc:70:19: note: use reference type to prevent copying
+   70 |   for (const auto stop_sign : associated_stop_signs) {
+      |                   ^~~~~~~~~
+      |                   &
+(06:13:46) INFO: From Compiling modules/planning/scenarios/stop_sign_unprotected/stage_stop.cc:
+In file included from bazel-out/k8-opt/bin/external/boost/_virtual_includes/boost/boost/thread/pthread/condition_variable.hpp:15,
+                 from bazel-out/k8-opt/bin/external/boost/_virtual_includes/boost/boost/thread/condition_variable.hpp:16,
+                 from bazel-out/k8-opt/bin/external/boost/_virtual_includes/boost/boost/thread/pthread/shared_mutex.hpp:15,
+                 from bazel-out/k8-opt/bin/external/boost/_virtual_includes/boost/boost/thread/shared_mutex.hpp:28,
+                 from ./modules/planning/planning_base/common/indexed_list.h:26,
+                 from ./modules/planning/planning_base/common/obstacle.h:37,
+                 from ./modules/planning/planning_base/common/ego_info.h:30,
+                 from ./modules/planning/planning_base/common/dependency_injector.h:20,
+                 from ./modules/planning/planning_interface_base/scenario_base/stage.h:30,
+                 from ./modules/planning/scenarios/stop_sign_unprotected/stage_stop.h:28,
+                 from modules/planning/scenarios/stop_sign_unprotected/stage_stop.cc:21:
+bazel-out/k8-opt/bin/external/boost/_virtual_includes/boost/boost/thread/pthread/thread_data.hpp: In member function 'void boost::thread_attributes::set_stack_size(std::size_t)':
+bazel-out/k8-opt/bin/external/boost/_virtual_includes/boost/boost/thread/pthread/thread_data.hpp:61:19: warning: comparison of integer expressions of different signedness: 'std::size_t' {aka 'long unsigned int'} and 'long int' [-Wsign-compare]
+   61 |           if (size<PTHREAD_STACK_MIN) size=PTHREAD_STACK_MIN;
+      |                   ^
+In file included from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/transport/transport.h:29,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/node/reader_base.h:29,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/node/reader.h:35,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/blocker/intra_reader.h:26,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/node/node_channel_impl.h:25,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/node/node.h:25,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/component/component_base.h:32,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/component/component.h:29,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/cyber.h:25,
+                 from ./modules/planning/planning_base/reference_line/reference_line_provider.h:37,
+                 from ./modules/planning/planning_base/common/ego_info.h:33,
+                 from ./modules/planning/planning_base/common/dependency_injector.h:20,
+                 from ./modules/planning/planning_interface_base/scenario_base/stage.h:30,
+                 from ./modules/planning/scenarios/stop_sign_unprotected/stage_stop.h:28,
+                 from modules/planning/scenarios/stop_sign_unprotected/stage_stop.cc:21:
+bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/transport/dispatcher/shm_dispatcher.h: In lambda function:
+bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/transport/dispatcher/shm_dispatcher.h:196:25: warning: comparison of integer expressions of different signedness: 'int' and 'std::vector<long unsigned int>::size_type' {aka 'long unsigned int'} [-Wsign-compare]
+  196 |       for (int i = 0; i < related_blocks_for_lock.size(); ++i) {
+      |                       ~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/transport/dispatcher/shm_dispatcher.h: In lambda function:
+bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/transport/dispatcher/shm_dispatcher.h:310:25: warning: comparison of integer expressions of different signedness: 'int' and 'std::vector<long unsigned int>::size_type' {aka 'long unsigned int'} [-Wsign-compare]
+  310 |       for (int i = 0; i < related_blocks_for_lock.size(); ++i) {
+      |                       ~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+(06:13:46) INFO: From Compiling modules/planning/tasks/speed_bounds_decider/speed_limit_decider.cc:
+In file included from bazel-out/k8-opt/bin/external/boost/_virtual_includes/boost/boost/thread/pthread/condition_variable.hpp:15,
+                 from bazel-out/k8-opt/bin/external/boost/_virtual_includes/boost/boost/thread/condition_variable.hpp:16,
+                 from bazel-out/k8-opt/bin/external/boost/_virtual_includes/boost/boost/thread/pthread/shared_mutex.hpp:15,
+                 from bazel-out/k8-opt/bin/external/boost/_virtual_includes/boost/boost/thread/shared_mutex.hpp:28,
+                 from ./modules/planning/planning_base/common/indexed_list.h:26,
+                 from ./modules/planning/planning_base/common/obstacle.h:37,
+                 from ./modules/planning/tasks/speed_bounds_decider/speed_limit_decider.h:29,
+                 from modules/planning/tasks/speed_bounds_decider/speed_limit_decider.cc:21:
+bazel-out/k8-opt/bin/external/boost/_virtual_includes/boost/boost/thread/pthread/thread_data.hpp: In member function 'void boost::thread_attributes::set_stack_size(std::size_t)':
+bazel-out/k8-opt/bin/external/boost/_virtual_includes/boost/boost/thread/pthread/thread_data.hpp:61:19: warning: comparison of integer expressions of different signedness: 'std::size_t' {aka 'long unsigned int'} and 'long int' [-Wsign-compare]
+   61 |           if (size<PTHREAD_STACK_MIN) size=PTHREAD_STACK_MIN;
+      |                   ^
+(06:13:46) ERROR: /apollo_workspace/modules/planning/tasks/lane_borrow_path/BUILD:13:14: Compiling modules/planning/tasks/lane_borrow_path/lane_borrow_path.cc failed: (Exit 1): gcc failed: error executing command 
+  (cd /apollo_workspace/.cache/bazel/679551712d2357b63e6e0ce858ebf90e/execroot/application-pnc && \
+  exec env - \
+    CUDA_TOOLKIT_PATH=/usr/local/cuda-11.8 \
+    GCC_HOST_COMPILER_PATH=/usr/bin/x86_64-linux-gnu-gcc-11 \
+    LD_LIBRARY_PATH=/usr/local/nvidia/lib:/usr/local/nvidia/lib64 \
+    PATH=/usr/local/cuda/bin:/opt/apollo/neo/bin:/root/.cursor-server/bin/6af2d906e8ca91654dd7c4224a73ef17900ad730/bin/remote-cli:/root/.cursor-server/bin/6af2d906e8ca91654dd7c4224a73ef17900ad730/bin/remote-cli:/opt/apollo/sysroot/bin:/usr/local/nvidia/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/qt5/bin \
+    PWD=/proc/self/cwd \
+    PYTHON_BIN_PATH=/usr/bin/python3 \
+    PYTHON_LIB_PATH=/usr/lib/python3/dist-packages \
+    TF_CUDA_COMPUTE_CAPABILITIES=3.7,5.2,6.0,6.1,7.0,7.2,7.5,8.6 \
+  /usr/bin/gcc -U_FORTIFY_SOURCE -fstack-protector -Wall -Wunused-but-set-parameter -Wno-free-nonheap-object -fno-omit-frame-pointer -g0 -O2 '-D_FORTIFY_SOURCE=1' -DNDEBUG -ffunction-sections -fdata-sections '-std=c++0x' -MD -MF bazel-out/k8-opt/bin/modules/planning/tasks/lane_borrow_path/_objs/lane_borrow_path_lib/lane_borrow_path.pic.d '-frandom-seed=bazel-out/k8-opt/bin/modules/planning/tasks/lane_borrow_path/_objs/lane_borrow_path_lib/lane_borrow_path.pic.o' -fPIC -iquote . -iquote bazel-out/k8-opt/bin -iquote external/common-msgs -iquote bazel-out/k8-opt/bin/external/common-msgs -iquote external/map -iquote bazel-out/k8-opt/bin/external/map -iquote external/common -iquote bazel-out/k8-opt/bin/external/common -iquote external/cyber -iquote bazel-out/k8-opt/bin/external/cyber -iquote external/apollo_src -iquote bazel-out/k8-opt/bin/external/apollo_src -iquote external/com_google_protobuf -iquote bazel-out/k8-opt/bin/external/com_google_protobuf -iquote external/zlib -iquote bazel-out/k8-opt/bin/external/zlib -iquote external/prediction -iquote bazel-out/k8-opt/bin/external/prediction -iquote external/adolc -iquote bazel-out/k8-opt/bin/external/adolc -iquote external/boost -iquote bazel-out/k8-opt/bin/external/boost -iquote external/com_github_gflags_gflags -iquote bazel-out/k8-opt/bin/external/com_github_gflags_gflags -iquote external/com_google_absl -iquote bazel-out/k8-opt/bin/external/com_google_absl -iquote external/com_google_googletest -iquote bazel-out/k8-opt/bin/external/com_google_googletest -iquote external/eigen -iquote bazel-out/k8-opt/bin/external/eigen -iquote external/ipopt -iquote bazel-out/k8-opt/bin/external/ipopt -iquote external/libtorch_cpu -iquote bazel-out/k8-opt/bin/external/libtorch_cpu -iquote external/local_config_python -iquote bazel-out/k8-opt/bin/external/local_config_python -iquote external/opencv -iquote bazel-out/k8-opt/bin/external/opencv -iquote external/osqp -iquote bazel-out/k8-opt/bin/external/osqp -iquote external/ad_rss_lib -iquote bazel-out/k8-opt/bin/external/ad_rss_lib -iquote external/fastdds -iquote bazel-out/k8-opt/bin/external/fastdds -iquote external/com_github_google_glog -iquote bazel-out/k8-opt/bin/external/com_github_google_glog -iquote external/libtorch_gpu -iquote bazel-out/k8-opt/bin/external/libtorch_gpu -iquote external/local_config_cuda -iquote bazel-out/k8-opt/bin/external/local_config_cuda -iquote external/com_github_nlohmann_json -iquote bazel-out/k8-opt/bin/external/com_github_nlohmann_json -iquote external/npp -iquote bazel-out/k8-opt/bin/external/npp -iquote external/proj -iquote bazel-out/k8-opt/bin/external/proj -iquote external/tf2 -iquote bazel-out/k8-opt/bin/external/tf2 -iquote external/com_github_jbeder_yaml_cpp -iquote bazel-out/k8-opt/bin/external/com_github_jbeder_yaml_cpp -iquote external/bvar -iquote bazel-out/k8-opt/bin/external/bvar -iquote external/coinor-libipopt-dev -iquote bazel-out/k8-opt/bin/external/coinor-libipopt-dev -iquote external/gperftools -iquote bazel-out/k8-opt/bin/external/gperftools -iquote external/libdouble-conversion-dev -iquote bazel-out/k8-opt/bin/external/libdouble-conversion-dev -iquote external/libflann-dev -iquote bazel-out/k8-opt/bin/external/libflann-dev -iquote external/libfreetype6 -iquote bazel-out/k8-opt/bin/external/libfreetype6 -iquote external/libgl1-mesa-dev -iquote bazel-out/k8-opt/bin/external/libgl1-mesa-dev -iquote external/libglew-dev -iquote bazel-out/k8-opt/bin/external/libglew-dev -iquote external/libgtk2.0-0 -iquote bazel-out/k8-opt/bin/external/libgtk2.0-0 -iquote external/libhdf5-dev -iquote bazel-out/k8-opt/bin/external/libhdf5-dev -iquote external/libjsoncpp-dev -iquote bazel-out/k8-opt/bin/external/libjsoncpp-dev -iquote external/ncurses5 -iquote bazel-out/k8-opt/bin/external/ncurses5 -iquote external/libnuma-dev -iquote bazel-out/k8-opt/bin/external/libnuma-dev -iquote external/libopenblas-dev -iquote bazel-out/k8-opt/bin/external/libopenblas-dev -iquote external/libopenni0 -iquote bazel-out/k8-opt/bin/external/libopenni0 -iquote external/libpcap0.8 -iquote bazel-out/k8-opt/bin/external/libpcap0.8 -iquote external/libqhull-dev -iquote bazel-out/k8-opt/bin/external/libqhull-dev -iquote external/sqlite3 -iquote bazel-out/k8-opt/bin/external/sqlite3 -iquote external/libtiff5 -iquote bazel-out/k8-opt/bin/external/libtiff5 -iquote external/tinyxml2 -iquote bazel-out/k8-opt/bin/external/tinyxml2 -iquote external/libunwind-dev -iquote bazel-out/k8-opt/bin/external/libunwind-dev -iquote external/libusb-1.0-0 -iquote bazel-out/k8-opt/bin/external/libusb-1.0-0 -iquote external/libwebp-dev -iquote bazel-out/k8-opt/bin/external/libwebp-dev -iquote external/libxml2-dev -iquote bazel-out/k8-opt/bin/external/libxml2-dev -iquote external/libxt-dev -iquote bazel-out/k8-opt/bin/external/libxt-dev -iquote external/nethogs -iquote bazel-out/k8-opt/bin/external/nethogs -iquote external/sysstat -iquote bazel-out/k8-opt/bin/external/sysstat -iquote external/transform -iquote bazel-out/k8-opt/bin/external/transform -iquote external/uuid -iquote bazel-out/k8-opt/bin/external/uuid -Ibazel-out/k8-opt/bin/external/com_google_protobuf/_virtual_includes/any_proto -Ibazel-out/k8-opt/bin/external/boost/_virtual_includes/boost -Ibazel-out/k8-opt/bin/external/com_github_gflags_gflags/_virtual_includes/gflags -Ibazel-out/k8-opt/bin/external/com_google_absl/_virtual_includes/absl -Ibazel-out/k8-opt/bin/external/ipopt/_virtual_includes/ipopt -Ibazel-out/k8-opt/bin/external/libtorch_cpu/_virtual_includes/libtorch_cpu -Ibazel-out/k8-opt/bin/external/libtorch_cpu/_virtual_includes/libtorch_cpu_headers -Ibazel-out/k8-opt/bin/external/opencv/_virtual_includes/core -Ibazel-out/k8-opt/bin/external/opencv/_virtual_includes/imgcodecs -Ibazel-out/k8-opt/bin/external/opencv/_virtual_includes/imgproc -Ibazel-out/k8-opt/bin/external/osqp/_virtual_includes/osqp -Ibazel-out/k8-opt/bin/external/ad_rss_lib/_virtual_includes/ad_rss -Ibazel-out/k8-opt/bin/external/ad_rss_lib/_virtual_includes/situation_hpp -Ibazel-out/k8-opt/bin/external/fastdds/_virtual_includes/fastdds -Ibazel-out/k8-opt/bin/external/com_github_google_glog/_virtual_includes/glog -Ibazel-out/k8-opt/bin/external/libtorch_gpu/_virtual_includes/libtorch_gpu -Ibazel-out/k8-opt/bin/external/libtorch_gpu/_virtual_includes/libtorch_gpu_headers -Ibazel-out/k8-opt/bin/external/com_github_nlohmann_json/_virtual_includes/single_json -Ibazel-out/k8-opt/bin/external/opencv/_virtual_includes/highgui -Ibazel-out/k8-opt/bin/external/proj/_virtual_includes/proj -Ibazel-out/k8-opt/bin/external/tf2/_virtual_includes/tf2 -Ibazel-out/k8-opt/bin/external/tf2/_virtual_includes/third_party_Stf2_Ctf2 -Ibazel-out/k8-opt/bin/external/com_github_jbeder_yaml_cpp/_virtual_includes/yaml-cpp -Ibazel-out/k8-opt/bin/external/com_github_jbeder_yaml_cpp/_virtual_includes/yaml-headers -Ibazel-out/k8-opt/bin/external/com_github_jbeder_yaml_cpp/_virtual_includes/yaml-headers-without-prefix -Ibazel-out/k8-opt/bin/external/common/_virtual_includes/common -Ibazel-out/k8-opt/bin/external/common-msgs/_virtual_includes/common-msgs -Ibazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber -Ibazel-out/k8-opt/bin/external/map/_virtual_includes/map -Ibazel-out/k8-opt/bin/external/prediction/_virtual_includes/prediction -Ibazel-out/k8-opt/bin/external/transform/_virtual_includes/transform -isystem external/com_google_protobuf/src -isystem bazel-out/k8-opt/bin/external/com_google_protobuf/src -isystem external/zlib -isystem bazel-out/k8-opt/bin/external/zlib -isystem external/adolc -isystem bazel-out/k8-opt/bin/external/adolc -isystem external/boost/include -isystem bazel-out/k8-opt/bin/external/boost/include -isystem external/com_github_gflags_gflags/include -isystem bazel-out/k8-opt/bin/external/com_github_gflags_gflags/include -isystem external/com_google_absl/include -isystem bazel-out/k8-opt/bin/external/com_google_absl/include -isystem external/com_google_googletest/googlemock -isystem bazel-out/k8-opt/bin/external/com_google_googletest/googlemock -isystem external/com_google_googletest/googlemock/include -isystem bazel-out/k8-opt/bin/external/com_google_googletest/googlemock/include -isystem external/com_google_googletest/googletest -isystem bazel-out/k8-opt/bin/external/com_google_googletest/googletest -isystem external/com_google_googletest/googletest/include -isystem bazel-out/k8-opt/bin/external/com_google_googletest/googletest/include -isystem external/eigen -isystem bazel-out/k8-opt/bin/external/eigen -isystem external/ipopt/include -isystem bazel-out/k8-opt/bin/external/ipopt/include -isystem external/local_config_python/_python3/_python3_include -isystem bazel-out/k8-opt/bin/external/local_config_python/_python3/_python3_include -isystem external/opencv/include -isystem bazel-out/k8-opt/bin/external/opencv/include -isystem external/osqp/include -isystem bazel-out/k8-opt/bin/external/osqp/include -isystem external/ad_rss_lib/include -isystem bazel-out/k8-opt/bin/external/ad_rss_lib/include -isystem external/fastdds/include -isystem bazel-out/k8-opt/bin/external/fastdds/include -isystem external/com_github_google_glog/include -isystem bazel-out/k8-opt/bin/external/com_github_google_glog/include -isystem external/com_github_nlohmann_json/include -isystem bazel-out/k8-opt/bin/external/com_github_nlohmann_json/include -isystem external/npp/targets/x86_64-linux/include -isystem bazel-out/k8-opt/bin/external/npp/targets/x86_64-linux/include -isystem external/proj/include -isystem bazel-out/k8-opt/bin/external/proj/include -isystem external/com_github_jbeder_yaml_cpp/include -isystem bazel-out/k8-opt/bin/external/com_github_jbeder_yaml_cpp/include -isystem external/com_github_jbeder_yaml_cpp/src -isystem bazel-out/k8-opt/bin/external/com_github_jbeder_yaml_cpp/src -isystem external/bvar -isystem bazel-out/k8-opt/bin/external/bvar -isystem external/coinor-libipopt-dev -isystem bazel-out/k8-opt/bin/external/coinor-libipopt-dev -isystem external/gperftools -isystem bazel-out/k8-opt/bin/external/gperftools -isystem external/libdouble-conversion-dev -isystem bazel-out/k8-opt/bin/external/libdouble-conversion-dev -isystem external/libflann-dev -isystem bazel-out/k8-opt/bin/external/libflann-dev -isystem external/libfreetype6 -isystem bazel-out/k8-opt/bin/external/libfreetype6 -isystem external/libgl1-mesa-dev -isystem bazel-out/k8-opt/bin/external/libgl1-mesa-dev -isystem external/libglew-dev -isystem bazel-out/k8-opt/bin/external/libglew-dev -isystem external/libgtk2.0-0 -isystem bazel-out/k8-opt/bin/external/libgtk2.0-0 -isystem external/libhdf5-dev -isystem bazel-out/k8-opt/bin/external/libhdf5-dev -isystem external/libjsoncpp-dev -isystem bazel-out/k8-opt/bin/external/libjsoncpp-dev -isystem external/ncurses5 -isystem bazel-out/k8-opt/bin/external/ncurses5 -isystem external/libnuma-dev -isystem bazel-out/k8-opt/bin/external/libnuma-dev -isystem external/libopenblas-dev -isystem bazel-out/k8-opt/bin/external/libopenblas-dev -isystem external/libopenni0 -isystem bazel-out/k8-opt/bin/external/libopenni0 -isystem external/libpcap0.8 -isystem bazel-out/k8-opt/bin/external/libpcap0.8 -isystem external/libqhull-dev -isystem bazel-out/k8-opt/bin/external/libqhull-dev -isystem external/sqlite3 -isystem bazel-out/k8-opt/bin/external/sqlite3 -isystem external/libtiff5 -isystem bazel-out/k8-opt/bin/external/libtiff5 -isystem external/tinyxml2 -isystem bazel-out/k8-opt/bin/external/tinyxml2 -isystem external/libunwind-dev -isystem bazel-out/k8-opt/bin/external/libunwind-dev -isystem external/libusb-1.0-0 -isystem bazel-out/k8-opt/bin/external/libusb-1.0-0 -isystem external/libwebp-dev -isystem bazel-out/k8-opt/bin/external/libwebp-dev -isystem external/libxml2-dev -isystem bazel-out/k8-opt/bin/external/libxml2-dev -isystem external/libxt-dev -isystem bazel-out/k8-opt/bin/external/libxt-dev -isystem external/nethogs -isystem bazel-out/k8-opt/bin/external/nethogs -isystem external/sysstat -isystem bazel-out/k8-opt/bin/external/sysstat -isystem external/uuid -isystem bazel-out/k8-opt/bin/external/uuid -isystem external/apollo_src -isystem bazel-out/k8-opt/bin/external/apollo_src '-Werror=return-type' '-Werror=unused-but-set-variable' '-Werror=switch' -mavx2 '-fdiagnostics-color=always' '-Werror=reorder' '-std=c++1z' '-DMODULE_NAME="planning"' -fno-canonical-system-headers -Wno-builtin-macro-redefined '-D__DATE__="redacted"' '-D__TIMESTAMP__="redacted"' '-D__TIME__="redacted"' -c modules/planning/tasks/lane_borrow_path/lane_borrow_path.cc -o bazel-out/k8-opt/bin/modules/planning/tasks/lane_borrow_path/_objs/lane_borrow_path_lib/lane_borrow_path.pic.o)
+# Configuration: ceec5eaff94860a32766bc4355bec882f474a381feb3112a530b07cf5cf960c6
+# Execution platform: @local_config_platform//:host
+In file included from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/transport/transport.h:29,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/node/reader_base.h:29,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/node/reader.h:35,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/blocker/intra_reader.h:26,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/node/node_channel_impl.h:25,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/node/node.h:25,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/component/component_base.h:32,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/component/component.h:29,
+                 from bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/cyber.h:25,
+                 from bazel-out/k8-opt/bin/external/common/_virtual_includes/common/modules/common/monitor_log/monitor_logger.h:29,
+                 from bazel-out/k8-opt/bin/external/common/_virtual_includes/common/modules/common/monitor_log/monitor_log_buffer.h:31,
+                 from ./modules/planning/planning_base/common/frame.h:42,
+                 from ./modules/planning/planning_interface_base/task_base/common/path_generation.h:23,
+                 from ./modules/planning/tasks/lane_borrow_path/lane_borrow_path.h:29,
+                 from modules/planning/tasks/lane_borrow_path/lane_borrow_path.cc:17:
+bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/transport/dispatcher/shm_dispatcher.h: In lambda function:
+bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/transport/dispatcher/shm_dispatcher.h:196:25: warning: comparison of integer expressions of different signedness: 'int' and 'std::vector<long unsigned int>::size_type' {aka 'long unsigned int'} [-Wsign-compare]
+  196 |       for (int i = 0; i < related_blocks_for_lock.size(); ++i) {
+      |                       ~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/transport/dispatcher/shm_dispatcher.h: In lambda function:
+bazel-out/k8-opt/bin/external/cyber/_virtual_includes/cyber/cyber/transport/dispatcher/shm_dispatcher.h:310:25: warning: comparison of integer expressions of different signedness: 'int' and 'std::vector<long unsigned int>::size_type' {aka 'long unsigned int'} [-Wsign-compare]
+  310 |       for (int i = 0; i < related_blocks_for_lock.size(); ++i) {
+      |                       ~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from bazel-out/k8-opt/bin/external/boost/_virtual_includes/boost/boost/thread/pthread/condition_variable.hpp:15,
+                 from bazel-out/k8-opt/bin/external/boost/_virtual_includes/boost/boost/thread/condition_variable.hpp:16,
+                 from bazel-out/k8-opt/bin/external/boost/_virtual_includes/boost/boost/thread/pthread/shared_mutex.hpp:15,
+                 from bazel-out/k8-opt/bin/external/boost/_virtual_includes/boost/boost/thread/shared_mutex.hpp:28,
+                 from ./modules/planning/planning_base/common/indexed_list.h:26,
+                 from ./modules/planning/planning_base/common/obstacle.h:37,
+                 from ./modules/planning/planning_base/common/ego_info.h:30,
+                 from ./modules/planning/planning_base/common/frame.h:44,
+                 from ./modules/planning/planning_interface_base/task_base/common/path_generation.h:23,
+                 from ./modules/planning/tasks/lane_borrow_path/lane_borrow_path.h:29,
+                 from modules/planning/tasks/lane_borrow_path/lane_borrow_path.cc:17:
+bazel-out/k8-opt/bin/external/boost/_virtual_includes/boost/boost/thread/pthread/thread_data.hpp: In member function 'void boost::thread_attributes::set_stack_size(std::size_t)':
+bazel-out/k8-opt/bin/external/boost/_virtual_includes/boost/boost/thread/pthread/thread_data.hpp:61:19: warning: comparison of integer expressions of different signedness: 'std::size_t' {aka 'long unsigned int'} and 'long int' [-Wsign-compare]
+   61 |           if (size<PTHREAD_STACK_MIN) size=PTHREAD_STACK_MIN;
+      |                   ^
+modules/planning/tasks/lane_borrow_path/lane_borrow_path.cc: In member function 'virtual apollo::common::Status apollo::planning::LaneBorrowPath::Process(apollo::planning::Frame*, apollo::planning::ReferenceLineInfo*)':
+modules/planning/tasks/lane_borrow_path/lane_borrow_path.cc:70:7: error: 'DetectConstructionZone' was not declared in this scope
+   70 |       DetectConstructionZone(&zone_info)) {
+      |       ^~~~~~~~~~~~~~~~~~~~~~
+modules/planning/tasks/lane_borrow_path/lane_borrow_path.cc: In member function 'bool apollo::planning::LaneBorrowPath::DecidePathBounds(std::vector<apollo::planning::PathBoundary>*)':
+modules/planning/tasks/lane_borrow_path/lane_borrow_path.cc:148:40: error: 'class apollo::planning::SLPolygon' has no member named 'sl_boundary'; did you mean 'apollo::planning::SLBoundary apollo::planning::SLPolygon::sl_boundary_'? (not accessible from this context)
+  148 |       for (auto& sl_point : sl_polygon.sl_boundary()) {
+      |                                        ^~~~~~~~~~~
+In file included from ./modules/planning/planning_interface_base/task_base/common/path_util/path_bounds_decider_util.h:27,
+                 from ./modules/planning/planning_interface_base/task_base/common/path_generation.h:25,
+                 from ./modules/planning/tasks/lane_borrow_path/lane_borrow_path.h:29,
+                 from modules/planning/tasks/lane_borrow_path/lane_borrow_path.cc:17:
+./modules/planning/planning_base/common/sl_polygon.h:108:14: note: declared private here
+  108 |   SLBoundary sl_boundary_;
+      |              ^~~~~~~~~~~~
+modules/planning/tasks/lane_borrow_path/lane_borrow_path.cc: At global scope:
+modules/planning/tasks/lane_borrow_path/lane_borrow_path.cc:827:6: error: no declaration matches 'bool apollo::planning::LaneBorrowPath::DetectConstructionZone(apollo::planning::ReferenceLineInfo::ConstructionZoneInfo*)'
+  827 | bool LaneBorrowPath::DetectConstructionZone(
+      |      ^~~~~~~~~~~~~~
+modules/planning/tasks/lane_borrow_path/lane_borrow_path.cc:827:6: note: no functions named 'bool apollo::planning::LaneBorrowPath::DetectConstructionZone(apollo::planning::ReferenceLineInfo::ConstructionZoneInfo*)'
+In file included from modules/planning/tasks/lane_borrow_path/lane_borrow_path.cc:17:
+./modules/planning/tasks/lane_borrow_path/lane_borrow_path.h:35:7: note: 'class apollo::planning::LaneBorrowPath' defined here
+   35 | class LaneBorrowPath : public PathGeneration {
+      |       ^~~~~~~~~~~~~~
+Target //dev/buildtool/mock:mock_install failed to build
+(06:13:46) INFO: Elapsed time: 112.041s, Critical Path: 28.55s
+(06:13:46) INFO: 83 processes: 4 internal, 79 local.
+(06:13:46) FAILED: Build did NOT complete successfully
+(06:13:46) FAILED: Build did NOT complete successfully
+[buildtool] 2025-09-18 14:13:46 ERROR Encounter ErrCode.BazelErr
+[buildtool] 2025-09-18 14:13:46 ERROR hint: Compiling and install failed!
+[buildtool] 2025-09-18 14:13:46 ERROR solution: Please checkout the build file by following bazel error hints
+root@in-dev-docker:/apollo_workspace# 

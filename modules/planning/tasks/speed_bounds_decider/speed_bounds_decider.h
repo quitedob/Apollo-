@@ -47,6 +47,8 @@ class SpeedBoundsDecider : public Decider {
       const StGraphData& st_graph_data,
       planning_internal::STGraphDebug* st_graph_debug) const;
 
+  common::Status AddSpeedLimitFromConstructionZone(SpeedLimit* const speed_limit);
+
   SpeedBoundsDeciderConfig config_;
 };
 

@@ -28,6 +28,20 @@
 namespace apollo {
 namespace planning {
 
+// 帮助函数：安全地将size_t转换为int，避免签名性比较警告
+inline int SafeSizeToInt(size_t size) {
+  if (size > static_cast<size_t>(std::numeric_limits<int>::max())) {
+    AERROR << "Container size " << size << " exceeds int limit, truncating to int max";
+    return std::numeric_limits<int>::max();
+  }
+  return static_cast<int>(size);
+}
+
+// 帮助函数：安全地将size_t转换为double，避免签名性比较警告
+inline double SafeSizeToDouble(size_t size) {
+  return static_cast<double>(size);
+}
+
 using apollo::common::VehicleState;
 using apollo::common::math::Polygon2d;
 using apollo::common::math::Vec2d;
@@ -140,18 +154,28 @@ bool ValetParkingScenario::CheckDistanceToParkingSpot(
 bool ValetParkingScenario::IsSpotAvailable(
     const ParkingSpaceInfoConstPtr& parking_spot, Frame* frame) {
   if (!parking_spot) {
+    ADEBUG << "Parking spot pointer is null";
     return false;
   }
 
   // 从高精地图获取车位的几何多边形
   const auto& spot_polygon = parking_spot->polygon();
+  const auto& obstacles = frame->obstacles();
+
+  ADEBUG << "Checking availability of parking spot " << parking_spot->id().id()
+         << " against " << SafeSizeToInt(obstacles.size()) << " obstacles";
 
   // 遍历当前帧感知到的所有障碍物
-  for (const auto* obstacle : frame->obstacles()) {
+  int checked_obstacles = 0;
+  for (const auto* obstacle : obstacles) {
     // 忽略虚拟障碍物或置信度低的障碍物
     if (obstacle->IsVirtual()) {
+      ADEBUG << "Skipping virtual obstacle " << obstacle->Id();
       continue;
     }
+
+    checked_obstacles++;
+    ADEBUG << "Checking obstacle " << obstacle->Id() << " against parking spot";
 
     // 获取障碍物的感知多边形
     const Polygon2d& obstacle_polygon = obstacle->PerceptionPolygon();
@@ -159,12 +183,14 @@ bool ValetParkingScenario::IsSpotAvailable(
     // 检查车位多边形与障碍物多边形是否重叠
     // 增加一个小的安全缓冲（buffer）可以提高鲁棒性
     if (spot_polygon.HasOverlap(obstacle_polygon.ExpandByDistance(0.1))) {
-      ADEBUG << "Parking spot " << parking_spot->id().id()
-             << " is occupied by obstacle " << obstacle->Id();
+      AINFO << "Parking spot " << parking_spot->id().id()
+            << " is occupied by obstacle " << obstacle->Id();
       return false;  // 发现重叠，车位被占用
     }
   }
 
+  ADEBUG << "Parking spot " << parking_spot->id().id() << " is available after checking "
+         << checked_obstacles << " real obstacles";
   return true;  // 未发现任何重叠，车位可用
 }
 
@@ -178,14 +204,20 @@ bool ValetParkingScenario::FindClosestAvailableSpot(Frame* frame,
   // 1. 获取当前车道及后续车道上的所有泊车位ID
   std::vector<std::string> parking_spot_ids;
   const auto& segments = reference_line_info.Lanes();
-  for (const auto& segment : segments.RouteSegments()) {
-    for (const auto& overlap : segment.lane->parking_space_overlaps()) {
-      parking_spot_ids.push_back(overlap.object_id);
+  ADEBUG << "Searching parking spots in " << SafeSizeToInt(segments.size()) << " lane segments";
+
+  for (const auto& segment : segments) {
+    const auto& parking_spaces = segment.lane->parking_spaces();
+    ADEBUG << "Lane segment has " << SafeSizeToInt(parking_spaces.size()) << " parking spaces";
+
+    for (const auto& parking_space : parking_spaces) {
+      parking_spot_ids.push_back(parking_space->id().id());
     }
   }
 
+  ADEBUG << "Total parking spot candidates found: " << SafeSizeToInt(parking_spot_ids.size());
   if (parking_spot_ids.empty()) {
-    ADEBUG << "No parking spots found along the current route.";
+    AINFO << "[ValetParking] No parking spots found along the current route.";
     return false;
   }
 
@@ -197,6 +229,9 @@ bool ValetParkingScenario::FindClosestAvailableSpot(Frame* frame,
   std::string best_spot_id = "";
 
   // 3. 遍历所有候选车位，进行过滤和排序
+  int available_spot_count = 0;
+  ADEBUG << "Evaluating " << SafeSizeToInt(parking_spot_ids.size()) << " parking spot candidates";
+
   for (const auto& spot_id_str : parking_spot_ids) {
     hdmap::Id spot_id;
     spot_id.set_id(spot_id_str);
@@ -206,11 +241,31 @@ bool ValetParkingScenario::FindClosestAvailableSpot(Frame* frame,
       continue;
     }
 
+    ADEBUG << "Evaluating parking spot " << spot_id_str;
+
     // 过滤：检查车位是否可用
     if (IsSpotAvailable(parking_spot_info, frame)) {
+      available_spot_count++;
+      ADEBUG << "Parking spot " << spot_id_str << " is available";
+
       // 排序：计算距离
       const auto& spot_polygon = parking_spot_info->polygon();
-      const Vec2d spot_center = spot_polygon.center();
+      // 计算停车位的中心点，通过平均所有顶点
+      Vec2d spot_center(0.0, 0.0);
+      const auto& points = spot_polygon.points();
+      size_t points_size = points.size();
+
+      if (points_size == 0) {
+        AWARN << "Parking spot " << spot_id_str << " has no polygon points, skipping";
+        continue;
+      }
+
+      ADEBUG << "Parking spot " << spot_id_str << " has " << SafeSizeToInt(points_size) << " polygon points";
+
+      for (const auto& point : points) {
+        spot_center += point;
+      }
+      spot_center /= SafeSizeToDouble(points_size);
       common::SLPoint spot_sl;
       if (!reference_line.XYToSL(spot_center, &spot_sl)) {
         AWARN << "Failed to project parking spot " << spot_id_str
@@ -228,11 +283,18 @@ bool ValetParkingScenario::FindClosestAvailableSpot(Frame* frame,
   }
 
   // 4. 最终选择
+  AINFO << "[ValetParking] Evaluation complete: "
+        << available_spot_count << " available spots found out of "
+        << SafeSizeToInt(parking_spot_ids.size()) << " total candidates";
+
   if (!best_spot_id.empty()) {
+    AINFO << "[ValetParking] Selected best parking spot: " << best_spot_id
+          << " with distance: " << min_distance;
     *target_spot_id = best_spot_id;
     return true;
   }
 
+  AINFO << "[ValetParking] No suitable parking spot found among available spots";
   return false;
 }
 

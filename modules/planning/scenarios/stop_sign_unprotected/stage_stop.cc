@@ -31,7 +31,7 @@
 #include "modules/planning/planning_base/common/frame.h"
 #include "modules/planning/planning_base/common/planning_context.h"
 #include "modules/planning/planning_base/common/util/util.h"
-#include "modules/planning/planning_base/common/vehicle_config_helper.h"
+#include "modules/common/configs/vehicle_config_helper.h"
 #include "modules/planning/planning_base/reference_line/reference_line.h"
 #include "modules/planning/scenarios/stop_sign_unprotected/context.h"
 
@@ -59,8 +59,9 @@ StageResult StopSignUnprotectedStageStop::Process(
   CHECK_NOTNULL(context_);
 
   auto context = GetContextAs<StopSignUnprotectedContext>();
-  const ScenarioStopSignUnprotectedConfig& scenario_config =
-      context->scenario_config;
+  // 获取场景配置（暂未使用，保留以备后续扩展）
+  // const ScenarioStopSignUnprotectedConfig& scenario_config =
+  //     context->scenario_config;
 
   StageResult result = ExecuteTaskOnReferenceLine(planning_init_point, frame);
   if (result.HasError()) {
@@ -251,7 +252,7 @@ bool StopSignUnprotectedStageStop::IsIntersectionClear(
   }
 
   // 获取车辆参数
-  const auto& vehicle_config = VehicleConfigHelper::Instance()->GetConfig();
+  const auto& vehicle_config = common::VehicleConfigHelper::Instance()->GetConfig();
   const double vehicle_width = vehicle_config.vehicle_param().width();
 
   // 构建主车冲突区域的多边形
@@ -302,7 +303,7 @@ bool StopSignUnprotectedStageStop::IsIntersectionClear(
   constexpr double kPredictionTimeHorizon = 5.0;  // 5秒预测时域
   constexpr double kTimeStep = 0.5;  // 0.5秒时间步长
 
-  for (const auto& obstacle : obstacles) {
+  for (const auto* obstacle : obstacles.Items()) {
     // 只关注动态障碍物
     if (obstacle->IsStatic()) {
       continue;
