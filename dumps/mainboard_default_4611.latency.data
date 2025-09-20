@@ -1,10 +1,10 @@
-mainboard_cpu_usage_latency : 9
-mainboard_cpu_usage_latency_80 : 9
-mainboard_cpu_usage_latency_90 : 9
-mainboard_cpu_usage_latency_99 : 9
-mainboard_cpu_usage_latency_999 : 9
-mainboard_cpu_usage_latency_9999 : 9
-mainboard_cpu_usage_max_latency : 9
+mainboard_cpu_usage_latency : 10
+mainboard_cpu_usage_latency_80 : 10
+mainboard_cpu_usage_latency_90 : 10
+mainboard_cpu_usage_latency_99 : 10
+mainboard_cpu_usage_latency_999 : 10
+mainboard_cpu_usage_latency_9999 : 10
+mainboard_cpu_usage_max_latency : 10
 mainboard_mem_resident_usage_latency : 9088
 mainboard_mem_resident_usage_latency_80 : 9088
 mainboard_mem_resident_usage_latency_90 : 9088
