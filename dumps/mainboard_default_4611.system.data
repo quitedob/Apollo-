@@ -4,35 +4,35 @@ mainboard_process_cmdline : "mainboard
 -d
 modules/studio_connector/studio_connector.dag
 -p
-mainboard_default_3981
+mainboard_default_4611
 -s
 CYBER_DEFAULT
 --disable_plugin_autoload
 "
-mainboard_process_context_switches_involuntary_second : 2
-mainboard_process_context_switches_voluntary_second : 2444
-mainboard_process_cpu_usage : 0.110
-mainboard_process_cpu_usage_system : 0.053
-mainboard_process_cpu_usage_user : 0.057
+mainboard_process_context_switches_involuntary_second : 3
+mainboard_process_context_switches_voluntary_second : 2887
+mainboard_process_cpu_usage : 0.118
+mainboard_process_cpu_usage_system : 0.097
+mainboard_process_cpu_usage_user : 0.021
 mainboard_process_disk_read_bytes_second : 0
 mainboard_process_disk_write_bytes_second : 1228
-mainboard_process_faults_major : 132
+mainboard_process_faults_major : 195
 mainboard_process_faults_minor_second : 0
-mainboard_process_fd_count : 110
+mainboard_process_fd_count : 114
 mainboard_process_inblocks_second : 0
-mainboard_process_io_read_bytes_second : 568
+mainboard_process_io_read_bytes_second : 567
 mainboard_process_io_read_second : 5
-mainboard_process_io_write_bytes_second : 533
+mainboard_process_io_write_bytes_second : 534
 mainboard_process_io_write_second : 0
-mainboard_process_memory_data_and_stack : 517746688
-mainboard_process_memory_resident : 58589184
-mainboard_process_memory_shared : 54525952
+mainboard_process_memory_data_and_stack : 580665344
+mainboard_process_memory_resident : 9306112
+mainboard_process_memory_shared : 5373952
 mainboard_process_memory_text : 331776
-mainboard_process_memory_virtual : 938168320
+mainboard_process_memory_virtual : 1022107648
 mainboard_process_nice : 0
 mainboard_process_outblocks_second : 2
 mainboard_process_priority : 20
-mainboard_process_thread_count : 34
-mainboard_process_uptime : 7312.191322
+mainboard_process_thread_count : 38
+mainboard_process_uptime : 2751.184396
 mainboard_process_username : "unknown (No such device or address)"
 mainboard_process_work_dir : "/apollo"

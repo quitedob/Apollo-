@@ -1,0 +1,44 @@
+# ISCC 2025 自主泊车场景配置
+# 90秒时间限制保护和禁行区保护
+
+# 泊车场景基本配置
+scenario_type: VALET_PARKING
+scenario_name: "VALET_PARKING"
+
+# ISCC 2025: 90秒时间限制保护
+# 超过阈值触发放弃/回退策略
+parking_time_limit: 90.0  # 秒
+time_limit_warning: 60.0  # 秒（开始警告）
+
+# ISCC 2025: 禁行区保护配置
+# 禁行区为红色区域，禁止驶入
+forbidden_zones_enabled: true
+# 禁行区多边形ROI定义（示例，需要根据实际赛题地图调整）
+# forbidden_zone_polygon: [
+#   {x: 10.0, y: 5.0},
+#   {x: 15.0, y: 5.0},
+#   {x: 15.0, y: 10.0},
+#   {x: 10.0, y: 10.0}
+# ]
+
+# ISCC 2025: 车位选择策略
+# 选择最近车位，考虑路径长度和驶入可行性
+parking_spot_selection: "NEAREST_FEASIBLE"
+max_parking_attempts: 3
+
+# ISCC 2025: Open Space Planner优化参数
+# 针对ISCC 2025竞赛优化的参数
+open_space_optimization_enabled: true
+# 最大速度限制（避免超时）
+max_parking_speed: 2.0  # m/s
+# 最大加速度限制
+max_parking_acceleration: 1.5  # m/s²
+# 最大jerk限制
+max_parking_jerk: 2.0  # m/s³
+
+# ISCC 2025: 失败恢复策略
+# 泊车失败时的兜底策略
+fallback_enabled: true
+fallback_timeout: 10.0  # 秒
+# 失败时回退到安全位置
+fallback_to_safe_position: true

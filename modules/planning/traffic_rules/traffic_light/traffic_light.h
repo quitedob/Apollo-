@@ -43,6 +43,14 @@ class TrafficLight : public TrafficRule {
   void MakeDecisions(Frame* const frame,
                      ReferenceLineInfo* const reference_line_info);
 
+  // ISCC 2025: Helper functions for red light right turn logic
+  bool IsRightTurnOnRed(const ReferenceLineInfo& reference_line_info) const;
+  bool GapAcceptSafe(const Frame& frame, const ReferenceLineInfo& reference_line_info) const;
+  void AllowProceedWithCreep(ReferenceLineInfo* reference_line_info) const;
+  bool NeedBypassStoppedVehicle(const Frame& frame, const ReferenceLineInfo& reference_line_info) const;
+  void InflateObstacleLateral(ReferenceLineInfo* reference_line_info, double inflate_m) const;
+  void LimitSpeedInWindow(ReferenceLineInfo* reference_line_info, double v_max, const std::string& tag) const;
+
  private:
   static constexpr char const* TRAFFIC_LIGHT_VO_ID_PREFIX = "TL_";
 };

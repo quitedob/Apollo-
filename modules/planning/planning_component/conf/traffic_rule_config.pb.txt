@@ -3,6 +3,10 @@ rule {
   type: "BacksideVehicle"
 }
 rule {
+  name: "CONSTRUCTION_ZONE"
+  type: "ConstructionZone"
+}
+rule {
   name: "CROSSWALK"
   type: "Crosswalk"
 }

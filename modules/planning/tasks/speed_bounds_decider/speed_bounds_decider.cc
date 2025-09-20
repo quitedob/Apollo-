@@ -25,6 +25,7 @@
 #include "modules/common/vehicle_state/vehicle_state_provider.h"
 #include "modules/planning/planning_base/common/path/path_data.h"
 #include "modules/planning/planning_base/common/planning_context.h"
+#include "modules/planning/planning_base/common/speed_limit.h"
 #include "modules/planning/planning_base/common/st_graph_data.h"
 #include "modules/planning/planning_base/common/util/common.h"
 #include "modules/planning/planning_base/gflags/planning_gflags.h"
@@ -262,37 +263,6 @@ void SpeedBoundsDecider::RecordSTGraphDebug(
     speed_point->set_v(point.second);
   }
 }
-
-}  // namespace planning
-}  // namespace apollo
-    SpeedLimit* const speed_limit) {
-  DCHECK_NOTNULL(speed_limit);
-  const auto& zone_info_opt = reference_line_info_->construction_zone_info();
-
-  if (!zone_info_opt) {
-    // No construction zone detected on this reference line.
-    return Status::OK();
-  }
-
-  const auto& zone_info = *zone_info_opt;
-
-  // Use default buffer values for simplicity
-  const double slowdown_buffer = 5.0;  // 5 meters buffer before construction zone
-  const double speedup_buffer = 3.0;   // 3 meters buffer after construction zone
-
-  const double start_s = std::max(0.0, zone_info.start_s - slowdown_buffer);
-  const double end_s = zone_info.end_s + speedup_buffer;
-
-  // Apply speed limit by adding discrete points at the start and end
-  speed_limit->AppendSpeedLimit(start_s, zone_info.speed_limit_mps);
-  speed_limit->AppendSpeedLimit(end_s, zone_info.speed_limit_mps);
-  ADEBUG << "Added construction zone speed limit of "
-         << zone_info.speed_limit_mps << " m/s from s=" << start_s
-         << " to s=" << end_s;
-
-  return Status::OK();
-}
-// MODIFICATION FOR CONSTRUCTION ZONE
 
 }  // namespace planning
 }  // namespace apollo

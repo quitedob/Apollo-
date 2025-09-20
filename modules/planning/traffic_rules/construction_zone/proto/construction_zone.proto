@@ -1,0 +1,22 @@
+// 文件: modules/planning/traffic_rules/construction_zone/proto/construction_zone.proto
+// 目的：ISCC 2025 施工区域限速规则协议定义
+// 功能：定义施工区域的限速配置和参数
+
+syntax = "proto2";
+
+package apollo.planning;
+
+import "modules/planning/planning_interface_base/proto/traffic_rule.proto";
+
+message ConstructionZoneConfig {
+  // 是否启用施工区域规则
+  optional bool enabled = 1 [default = true];
+
+  // 施工区域限速 (m/s)
+  // ISCC 2025: 30 km/h = 8.33 m/s
+  optional double speed_limit = 2 [default = 8.33];
+
+  // 施工区域最小横向距离 (m)
+  // ISCC 2025: 确保与锥桶/围挡的横向距离
+  optional double min_lateral_distance = 3 [default = 1.0];
+}

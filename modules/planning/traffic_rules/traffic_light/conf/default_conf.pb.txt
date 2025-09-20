@@ -1,5 +1,7 @@
 enabled: true
 # stop_distance defines the maximum allowed distance from the stop line.
 # The vehicle will target a preferred distance within this limit.
-stop_distance: 2.0
+# Updated for ISCC 2025: 1.7m (target bumper distance) + 2.151m (front_edge_to_center) = 3.851m
+# This places the bumper within the 1.5-2.0m scoring window for red light straight stopping
+stop_distance: 3.851
 max_stop_deceleration: 4.0

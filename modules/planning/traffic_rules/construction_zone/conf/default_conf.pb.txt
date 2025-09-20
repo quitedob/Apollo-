@@ -1,0 +1,6 @@
+enabled: true
+# ISCC 2025: 施工区域限速配置
+# 30 km/h = 8.33 m/s
+speed_limit: 8.33
+# 最小横向距离，确保与锥桶保持安全距离
+min_lateral_distance: 1.0
